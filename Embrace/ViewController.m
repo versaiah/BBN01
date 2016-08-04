@@ -21,12 +21,13 @@ NSInteger   tagNotify;
 NSInteger   tagResp;
 NSInteger   targetCmd;
 NSInteger   sendCmdStatus;
+NSTimer*    timer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.cm = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
-    [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
     
     tagCmdArray = [NSArray arrayWithObjects:@"*GTC#",
                                             @"*GSN-YYY#",
@@ -55,9 +56,8 @@ NSInteger   sendCmdStatus;
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBG"]];
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
-    int num = MAX_TAGS;
-    
-    _tagRemotes = malloc(sizeof(tagRemote) * num);
+
+    _tagRemotes = malloc(sizeof(tagRemote) * MAX_TAGS);
     _tagRemotes[0].name = @"Notebook";
     _tagRemotes[1].name = @"Laptop";
     _tagRemotes[2].name = @"Pen Case";
@@ -111,26 +111,26 @@ NSInteger   sendCmdStatus;
     if (central.state == CBCentralManagerStatePoweredOn)
     {
         NSLog(@"centralManagerDidUpdateState");
+        [timer fire];
     }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
     NSLog(@"Did discover peripheral %@", peripheral.name);
-    self.state = CONNECTING;
     [self.cm stopScan];
+    self.state = CONNECTING;
     
+    /*
     NSMutableString* nsmstring=[NSMutableString stringWithString:@"\n"];
     [nsmstring appendString:@"Peripheral Info:"];
     [nsmstring appendFormat:@"NAME: %@\n",peripheral.name];
     [nsmstring appendFormat:@"RSSI: %@\n",RSSI];
     
-    //NSLog(@"adverisement:%@",advertisementData);
     [nsmstring appendFormat:@"adverisement:%@",advertisementData];
-    NSLog(@"%@",nsmstring);
+    NSLog(@"%@",nsmstring);*/
 
     self.currentPeripheral = [[UARTPeripheral alloc] initWithPeripheral:peripheral delegate:self];
-    
     [self.cm connectPeripheral:peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
 }
 
@@ -151,6 +151,10 @@ NSInteger   sendCmdStatus;
     {
         [self.currentPeripheral didDisconnect];
         self.state = IDLE;
+        if (timer.isValid == NO) {
+            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+            [timer fire];
+        }
     }
 }
 
@@ -158,21 +162,26 @@ NSInteger   sendCmdStatus;
 {
     switch (self.state) {
         case IDLE:
+            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
             NSLog(@"Started scan ...");
             [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             self.state = SCANNING;
             break;
         case SCANNING:
-            [self.cm stopScan];
-            timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:2];
-            NSLog(@"ReStarted scan ...");
-            [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
+            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
+            //[self.cm stopScan];
+            //[self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
+            //NSLog(@"ReStarted scan ...");
             break;
         case CONNECTING:
-            timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:2];
+            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
+            [self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
+            [self.cm connectPeripheral:self.currentPeripheral.peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
+            NSLog(@"ReCONNECTING ...");
             break;
         case CONNECTED:
-            timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:5];
+            [timer invalidate];
+            timer = nil;
             break;
         default:
             break;
@@ -292,7 +301,7 @@ NSInteger   sendCmdStatus;
         case GET_MAJOR:
             for (int i = 0; i < MAX_TAGS; i++) {
                 tmp1 = tagCmdArray[GET_MAJOR];
-                tmp2 = [NSString stringWithFormat: @"%03d", self.tagRemotes[i].index];
+                tmp2 = [NSString stringWithFormat: @"%03d", i + 1];
                 tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
                 [self.currentPeripheral writeString:tmp1];
             }
@@ -300,7 +309,7 @@ NSInteger   sendCmdStatus;
         case GET_MINOR:
             for (int i = 0; i < MAX_TAGS; i++) {
                 tmp1 = tagCmdArray[GET_MINOR];
-                tmp2 = [NSString stringWithFormat: @"%03d", self.tagRemotes[i].index];
+                tmp2 = [NSString stringWithFormat: @"%03d", i + 1];
                 tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
                 [self.currentPeripheral writeString:tmp1];
             }
@@ -308,7 +317,7 @@ NSInteger   sendCmdStatus;
         case GET_MFG_DATA:
             for (int i = 0; i < MAX_TAGS; i++) {
                 tmp1 = tagCmdArray[GET_MFG_DATA];
-                tmp2 = [NSString stringWithFormat: @"%03d", self.tagRemotes[i].index];
+                tmp2 = [NSString stringWithFormat: @"%03d", i + 1];
                 tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
                 [self.currentPeripheral writeString:tmp1];
             }
@@ -316,7 +325,7 @@ NSInteger   sendCmdStatus;
         case GET_ENABLE:
             for (int i = 0; i < MAX_TAGS; i++) {
                 tmp1 = tagCmdArray[GET_ENABLE];
-                tmp2 = [NSString stringWithFormat: @"%03d", self.tagRemotes[i].index];
+                tmp2 = [NSString stringWithFormat: @"%03d", i + 1];
                 tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
                 [self.currentPeripheral writeString:tmp1];
             }
@@ -324,7 +333,7 @@ NSInteger   sendCmdStatus;
         case GET_FOUND:
             for (int i = 0; i < MAX_TAGS; i++) {
                 tmp1 = tagCmdArray[GET_FOUND];
-                tmp2 = [NSString stringWithFormat: @"%03d", self.tagRemotes[i].index];
+                tmp2 = [NSString stringWithFormat: @"%03d", i + 1];
                 tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
                 [self.currentPeripheral writeString:tmp1];
             }
@@ -388,7 +397,7 @@ NSInteger   sendCmdStatus;
     NSString *tmp;
     
     for (int i = 0; i < MAX_TAGS; i++) {
-        tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04lX", _tagRemotes[i].name, _tagRemotes[i].index, _tagRemotes[i].minor];
+        tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04lX", _tagRemotes[i].name, i, _tagRemotes[i].minor];
         if (_tagRemotes[i].enable == 1) {
             [_tagView addTagToLast:tmp];
         } else {
