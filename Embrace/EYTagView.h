@@ -11,8 +11,6 @@
 
 #import <UIKit/UIKit.h>
 
-
-
 #define COLORRGBA(c,a) [UIColor colorWithRed:((c>>16)&0xFF)/255.0	\
 green:((c>>8)&0xFF)/255.0	\
 blue:(c&0xFF)/255.0         \

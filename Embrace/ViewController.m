@@ -56,23 +56,14 @@ NSInteger   sendCmdStatus;
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
     int num = MAX_TAGS;
+    
     _tagRemotes = malloc(sizeof(tagRemote) * num);
-        
     _tagRemotes[0].name = @"Notebook";
-    _tagRemotes[0].index = 1;
-    
     _tagRemotes[1].name = @"Laptop";
-    _tagRemotes[1].index = 2;
-    
     _tagRemotes[2].name = @"Pen Case";
-    _tagRemotes[2].index = 3;
-    
     _tagRemotes[3].name = @"Watch";
-    _tagRemotes[3].index = 4;
-    
     _tagRemotes[4].name = @"Book";
-    _tagRemotes[4].index = 5;
-
+    
     _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                           self.view.bounds.origin.y + 98,
                                                           self.view.bounds.size.width - 55,
@@ -86,7 +77,7 @@ NSInteger   sendCmdStatus;
     _tagView.backgroundColor = COLORRGB(0xffffff);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView.viewMaxHeight = 230;
-    _tagView.type = _type;
+    _tagView.type = EYTagView_Type_Edit;
     
     _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                            self.view.bounds.origin.y + 260,
@@ -271,6 +262,7 @@ NSInteger   sendCmdStatus;
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
         _tagRemotes[tagResp].enable = [tmp integerValue];
         tagResp++;
+        _tagRemotes[tagResp].index = tagResp;
         if (tagResp == MAX_TAGS) {
             //[self reNewButtonStatus];
             tagResp = 0;

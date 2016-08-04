@@ -10,8 +10,6 @@
 #import "EYTagView.h"
 #import "UARTPeripheral.h"
 
-
-
 typedef enum
 {
     IDLE = 0,
@@ -19,13 +17,6 @@ typedef enum
     CONNECTING,
     CONNECTED,
 } ConnectionState;
-
-typedef enum
-{
-    LOGGING,
-    RX,
-    TX,
-} ConsoleDataType;
 
 typedef enum
 {
@@ -60,7 +51,6 @@ typedef enum
 @property CBCentralManager *cm;
 @property ConnectionState state;
 @property UARTPeripheral *currentPeripheral;
-@property (nonatomic) EYTagView_Type type;
 @property tagRemote *tagRemotes;
 
 @end

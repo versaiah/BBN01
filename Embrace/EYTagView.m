@@ -6,10 +6,6 @@
 //  Copyright (c) 2015 Eric Yang. All rights reserved.
 //
 
-
-
-
-
 #import "EYTagView.h"
 #import "EYTextField.h"
 
