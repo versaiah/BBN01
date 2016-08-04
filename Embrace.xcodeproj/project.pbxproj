@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F0AB9DBB1D50530D007C22F0 /* UARTPeripheral.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AB9DBA1D50530D007C22F0 /* UARTPeripheral.m */; };
 		F0DD01501D49F5B0005D95DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD014F1D49F5B0005D95DF /* main.m */; };
 		F0DD01531D49F5B0005D95DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD01521D49F5B0005D95DF /* AppDelegate.m */; };
 		F0DD01561D49F5B0005D95DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD01551D49F5B0005D95DF /* ViewController.m */; };
@@ -16,6 +17,8 @@
 		F0DD01611D49F5B0005D95DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F0DD015F1D49F5B0005D95DF /* LaunchScreen.storyboard */; };
 		F0DD016C1D49F5B0005D95DF /* EmbraceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD016B1D49F5B0005D95DF /* EmbraceTests.m */; };
 		F0DD01771D49F5B0005D95DF /* EmbraceUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD01761D49F5B0005D95DF /* EmbraceUITests.m */; };
+		F0DD01901D4EF2D0005D95DF /* EYTagView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD018D1D4EF2D0005D95DF /* EYTagView.m */; };
+		F0DD01911D4EF2D0005D95DF /* EYTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DD018F1D4EF2D0005D95DF /* EYTextField.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F0AB9DB91D50530D007C22F0 /* UARTPeripheral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UARTPeripheral.h; sourceTree = "<group>"; };
+		F0AB9DBA1D50530D007C22F0 /* UARTPeripheral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UARTPeripheral.m; sourceTree = "<group>"; };
 		F0DD014B1D49F5B0005D95DF /* Embrace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Embrace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0DD014F1D49F5B0005D95DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F0DD01511D49F5B0005D95DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -53,6 +58,10 @@
 		F0DD01721D49F5B0005D95DF /* EmbraceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EmbraceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0DD01761D49F5B0005D95DF /* EmbraceUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmbraceUITests.m; sourceTree = "<group>"; };
 		F0DD01781D49F5B0005D95DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0DD018C1D4EF2D0005D95DF /* EYTagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EYTagView.h; sourceTree = "<group>"; };
+		F0DD018D1D4EF2D0005D95DF /* EYTagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EYTagView.m; sourceTree = "<group>"; };
+		F0DD018E1D4EF2D0005D95DF /* EYTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EYTextField.h; sourceTree = "<group>"; };
+		F0DD018F1D4EF2D0005D95DF /* EYTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EYTextField.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +112,12 @@
 		F0DD014D1D49F5B0005D95DF /* Embrace */ = {
 			isa = PBXGroup;
 			children = (
+				F0AB9DB91D50530D007C22F0 /* UARTPeripheral.h */,
+				F0AB9DBA1D50530D007C22F0 /* UARTPeripheral.m */,
+				F0DD018C1D4EF2D0005D95DF /* EYTagView.h */,
+				F0DD018D1D4EF2D0005D95DF /* EYTagView.m */,
+				F0DD018E1D4EF2D0005D95DF /* EYTextField.h */,
+				F0DD018F1D4EF2D0005D95DF /* EYTextField.m */,
 				F0DD01511D49F5B0005D95DF /* AppDelegate.h */,
 				F0DD01521D49F5B0005D95DF /* AppDelegate.m */,
 				F0DD01541D49F5B0005D95DF /* ViewController.h */,
@@ -274,9 +289,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F0DD01561D49F5B0005D95DF /* ViewController.m in Sources */,
+				F0AB9DBB1D50530D007C22F0 /* UARTPeripheral.m in Sources */,
 				F0DD01531D49F5B0005D95DF /* AppDelegate.m in Sources */,
 				F0DD01501D49F5B0005D95DF /* main.m in Sources */,
+				F0DD01901D4EF2D0005D95DF /* EYTagView.m in Sources */,
 				F0DD015C1D49F5B0005D95DF /* Embrace.xcdatamodeld in Sources */,
+				F0DD01911D4EF2D0005D95DF /* EYTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,10 +433,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Embrace/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Titoma.com.Embrace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -426,10 +447,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Embrace/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Titoma.com.Embrace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -500,6 +524,7 @@
 				F0DD017D1D49F5B0005D95DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0DD017E1D49F5B0005D95DF /* Build configuration list for PBXNativeTarget "EmbraceTests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +533,7 @@
 				F0DD01801D49F5B0005D95DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0DD01811D49F5B0005D95DF /* Build configuration list for PBXNativeTarget "EmbraceUITests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +542,7 @@
 				F0DD01831D49F5B0005D95DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
