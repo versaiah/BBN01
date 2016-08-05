@@ -42,10 +42,11 @@ alpha:1.0]
 @protocol EYTagViewDelegate <NSObject>
 
 @optional
--(void)heightDidChangedTagView:(EYTagView*)tagView;
+- (void)heightDidChangedTagView:(EYTagView*)tagView;
 
--(void)tagDidBeginEditing:(EYTagView*)tagView;
--(void)tagDidEndEditing:(EYTagView*)tagView;
+- (void)tagDidBeginEditing:(EYTagView*)tagView;
+- (void)tagDidEndEditing:(EYTagView*)tagView;
+- (void)tagDidPressing:(NSInteger)index;
 
 /**
  *  @return whether delete

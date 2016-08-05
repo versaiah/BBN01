@@ -21,7 +21,7 @@ NSInteger   tagNotify;
 NSInteger   tagResp;
 NSInteger   targetCmd;
 NSInteger   sendCmdStatus;
-NSTimer*    timer;
+NSTimer     *timer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -53,7 +53,7 @@ NSTimer*    timer;
                                             @"*DET-YYY#",
                                             nil];
 
-    UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBG"]];
+    UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageMainBG"]];
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
 
@@ -76,8 +76,11 @@ NSTimer*    timer;
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView.backgroundColor = COLORRGB(0xffffff);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
-    _tagView.viewMaxHeight = 230;
+    _tagView.viewMaxHeight = self.view.bounds.size.height - 100;
     _tagView.type = EYTagView_Type_Edit;
+    
+    [_tagView layoutTagviews];
+    [self.view addSubview:_tagView];
     
     _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                            self.view.bounds.origin.y + 260,
@@ -91,8 +94,11 @@ NSTimer*    timer;
     _tagView2.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView2.backgroundColor = COLORRGB(0xffffff);
     _tagView2.colorInputBoard = COLORRGB(0x2ab44e);
-    _tagView2.viewMaxHeight = 230;
+    _tagView2.viewMaxHeight = self.view.bounds.size.height - 100;
     _tagView2.type = EYTagView_Type_Edit_Only_Delete;
+    
+    [_tagView2 layoutTagviews];
+    [self.view addSubview:_tagView2];
 }
 
 - (void)didReceiveMemoryWarning
@@ -162,19 +168,16 @@ NSTimer*    timer;
 {
     switch (self.state) {
         case IDLE:
-            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
             NSLog(@"Started scan ...");
             [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             self.state = SCANNING;
             break;
         case SCANNING:
-            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
             //[self.cm stopScan];
             //[self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             //NSLog(@"ReStarted scan ...");
             break;
         case CONNECTING:
-            //timer.fireDate = [NSDate dateWithTimeIntervalSinceNow:3];
             [self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
             [self.cm connectPeripheral:self.currentPeripheral.peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
             NSLog(@"ReCONNECTING ...");
@@ -404,10 +407,11 @@ NSTimer*    timer;
             [_tagView2 addTagToLast:tmp];
         }
     }
-    [_tagView layoutTagviews];
-    [self.view addSubview:_tagView];
-    [_tagView2 layoutTagviews];
-    [self.view addSubview:_tagView2];
+}
+
+- (void)tagDidPressing:(NSInteger)index
+{
+    //[self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
 }
 
 @end

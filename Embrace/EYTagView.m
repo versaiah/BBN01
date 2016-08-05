@@ -18,11 +18,11 @@
 @property (nonatomic, strong) UIColor* colorText;
 @property (nonatomic, strong) UIColor* colorTagUnSelected;
 @property (nonatomic, strong) UIColor* colorTagBorder;
-@property (nonatomic)         NSInteger linkStatus;
 @end
 
 @implementation EYCheckBoxButton
--(void)setSelected:(BOOL)selected{
+-(void)setSelected:(BOOL)selected
+{
     [super setSelected:selected];
     if (selected) {
         [self setBackgroundColor:_colorBg];
@@ -104,57 +104,48 @@
     _tagStrings=[NSMutableArray new];
     _tagStringsSelected=[NSMutableArray new];
     
-    {
-        UIScrollView* sv = [[UIScrollView alloc] initWithFrame:self.bounds];
-        sv.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        sv.contentSize=sv.frame.size;
-        sv.contentSize=CGSizeMake(sv.frame.size.width, 600);
-        sv.indicatorStyle=UIScrollViewIndicatorStyleDefault;
-        sv.backgroundColor = self.backgroundColor;
-        sv.showsVerticalScrollIndicator = YES;
-        sv.showsHorizontalScrollIndicator = NO;
-        [self addSubview:sv];
-        _svContainer=sv;
-    }
-    {
-        UIButton *tf = [UIButton buttonWithType:UIButtonTypeCustom];
-        tf.frame = CGRectMake(0, 0, 0, _tagHeight);
-        [tf setBackgroundImage:[UIImage imageNamed:@"ImageAddBTN"] forState:UIControlStateNormal];
-        [tf.layer setMasksToBounds:YES];
-        [tf.layer setCornerRadius:3];
-        /*
-        UITextField* tf = [[EYTextField alloc] initWithFrame:CGRectMake(0, 0, 0, _tagHeight)];
-        tf.autocorrectionType = UITextAutocorrectionTypeNo;
-        [tf addTarget:self action:@selector(textFieldDidChange:)forControlEvents:UIControlEventEditingChanged];
-        tf.delegate = self;
-        tf.placeholder=EYLOCALSTRING(@"Add Tag");
-        tf.returnKeyType = UIReturnKeyDone; */
-        [_svContainer addSubview:tf];
-        _tfInput=tf;
-    }
-    {
-        UITapGestureRecognizer* panGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector
-        (handlerTapGesture:)];
-        panGestureRecognizer.numberOfTapsRequired=1;
-        [self addGestureRecognizer:panGestureRecognizer];
-    }
+    UIScrollView* sv = [[UIScrollView alloc] initWithFrame:self.bounds];
+    sv.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    sv.contentSize=sv.frame.size;
+    sv.contentSize=CGSizeMake(sv.frame.size.width, sv.frame.size.height * 2);
+    sv.indicatorStyle=UIScrollViewIndicatorStyleDefault;
+    sv.backgroundColor = self.backgroundColor;
+    sv.showsVerticalScrollIndicator = YES;
+    sv.showsHorizontalScrollIndicator = NO;
+    [self addSubview:sv];
+    _svContainer=sv;
+    
+    UIButton *tf = [UIButton buttonWithType:UIButtonTypeCustom];
+    tf.frame = CGRectMake(0, 0, 0, _tagHeight);
+    [tf setBackgroundImage:[UIImage imageNamed:@"ImageAddBTN"] forState:UIControlStateNormal];
+    [tf.layer setMasksToBounds:YES];
+    [tf.layer setCornerRadius:3];
+    [tf setShowsTouchWhenHighlighted:YES];
+    /*
+    UITextField* tf = [[EYTextField alloc] initWithFrame:CGRectMake(0, 0, 0, _tagHeight)];
+    tf.autocorrectionType = UITextAutocorrectionTypeNo;
+    [tf addTarget:self action:@selector(textFieldDidChange:)forControlEvents:UIControlEventEditingChanged];
+    tf.delegate = self;
+    tf.placeholder=EYLOCALSTRING(@"Add Tag");
+    tf.returnKeyType = UIReturnKeyDone; */
+    [_svContainer addSubview:tf];
+    _tfInput=tf;
+    
+    UITapGestureRecognizer* panGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector
+    (handlerTapGesture:)];
+    panGestureRecognizer.numberOfTapsRequired=1;
+    [self addGestureRecognizer:panGestureRecognizer];
 }
 #pragma mark -
--(NSMutableArray *)tagStrings{
-      switch (_type) {
+-(NSMutableArray *)tagStrings
+{
+    switch (_type) {
         case EYTagView_Type_Edit:
         case EYTagView_Type_Edit_Only_Delete:
-        {
             return _tagStrings;
-        }
-            break;
         case EYTagView_Type_Display:
-        {
             return nil;
-        }
-            break;
         case EYTagView_Type_Single_Selected:
-        {
             [_tagStringsSelected removeAllObjects];
             for (EYCheckBoxButton* button in _tagButtons) {
                 if (button.selected) {
@@ -163,10 +154,7 @@
                 }
             }
             return _tagStringsSelected;
-        }
-            break;
         case EYTagView_Type_Multi_Selected:
-        {
             [_tagStringsSelected removeAllObjects];
             for (EYCheckBoxButton* button in _tagButtons) {
                 if (button.selected) {
@@ -174,10 +162,7 @@
                 }
             }
             return _tagStringsSelected;
-        }
-              break;
         case EYTagView_Type_Multi_Selected_Edit:
-        {
             [_tagStringsSelected removeAllObjects];
             for (EYCheckBoxButton* button in _tagButtons) {
                 if (button.selected) {
@@ -185,16 +170,13 @@
                 }
             }
             return _tagStringsSelected;
-        }
         default:
-        {
-            
-        }
             break;
     }
     return nil;
 }
--(UIView*)newArrowView{
+-(UIView*)newArrowView
+{
     UIView* vArrow=[[UIView alloc]initWithFrame:CGRectMake(0, 0, _tagHeight*1.5f, _tagHeight)];
     vArrow.backgroundColor=[UIColor clearColor];
     {
@@ -207,11 +189,11 @@
         [vArrow addSubview:lb];
     }
     
-    
     return vArrow;
 }
 
--(void)layoutTagviews{
+-(void)layoutTagviews
+{
     float oldContentHeight=_svContainer.contentSize.height;
     float offsetX=_tagPaddingSize.width,offsetY=_tagPaddingSize.height;
     
@@ -321,18 +303,16 @@
         //_tfInput.frame.size.height * 0.5f;
         //_tfInput.layer.borderColor=_colorInputBoard.CGColor;
         //_tfInput.layer.borderWidth=1;
-        {
-            CGRect frame=_tfInput.frame;
-            //frame.size.width = [_tfInput.text sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2;
-            //place holde width
-            frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2 + 15);
-            _tfInput.frame=frame;
-        }
+        
+        CGRect frame=_tfInput.frame;
+        //frame.size.width = [_tfInput.text sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2;
+        //place holde width
+        frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2 + 15);
+        _tfInput.frame=frame;
         
         if (_tfInput.frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
             NSLog(@"!!!  _tfInput width tooooooooo large");
-            
-        }else{
+        } else {
             CGRect frame=_tfInput.frame;
             if ((offsetX+_tfInput.frame.size.width+_tagPaddingSize.width)
                 <=_svContainer.contentSize.width) {
@@ -347,50 +327,42 @@
                 offsetX+=_tfInput.frame.size.width+_tagPaddingSize.width;
             }
             _tfInput.frame=frame;
-            
         }
-        
     }
     
     _svContainer.contentSize=CGSizeMake(_svContainer.frame.size.width, offsetY+_tagHeight+_tagPaddingSize.height);
-    {
-        CGRect frame=_svContainer.frame;
-        frame.size.height=_svContainer.contentSize.height;
-        frame.size.height=MIN(frame.size.height, _viewMaxHeight);
-        _svContainer.frame=frame;
-    }
+
+    CGRect frame=_svContainer.frame;
+    frame.size.height=_svContainer.contentSize.height;
+    frame.size.height=MIN(frame.size.height, _viewMaxHeight);
+    _svContainer.frame=frame;
     
     float oldHeight=self.frame.size.height;
     float newHeight=_svContainer.frame.size.height;
     
-    if (self.translatesAutoresizingMaskIntoConstraints)
-    {//autosizing
-        {
-            CGRect frame=self.frame;
-            frame.size.height=newHeight;
-            self.frame=frame;
-        }
+    if (self.translatesAutoresizingMaskIntoConstraints) {//autosizing
+        CGRect frame=self.frame;
+        frame.size.height=newHeight;
+        self.frame=frame;
+            
         if (!_isInit
             && oldHeight!= newHeight
             && _delegate) {
             [_delegate heightDidChangedTagView:self];
-            
-        }else{
-            
+        } else {
         }
-    }else
-    {//auto layout
-        if (oldHeight!= newHeight){
+    } else {//auto layout
+        if (oldHeight!= newHeight) {
             _newHeight = newHeight;
             [self invalidateIntrinsicContentSize];
         }
     }
-    
-   
-   
+
     if (oldContentHeight != _svContainer.contentSize.height) {
-        CGPoint bottomOffset = CGPointMake(0, _svContainer.contentSize.height - _svContainer.bounds.size.height);
-        [_svContainer setContentOffset:bottomOffset animated:YES];
+        if (_svContainer.contentSize.height > _viewMaxHeight) {
+            CGPoint bottomOffset = CGPointMake(0, _svContainer.contentSize.height - _viewMaxHeight);
+            [_svContainer setContentOffset:bottomOffset animated:YES];
+        }
     }
 }
 
@@ -410,6 +382,7 @@
     tagBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     tag = [tag stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
     [tagBtn setTitle:tag forState:UIControlStateNormal];
+    [tagBtn setShowsTouchWhenHighlighted:YES];
     
     CGRect btnFrame;
     btnFrame.size.height = _tagHeight;
@@ -420,34 +393,38 @@
     tagBtn.frame=btnFrame;
     return tagBtn;
 }
+
 - (void)handlerTagButtonEvent:(EYCheckBoxButton*)sender
 {
-    
+    NSInteger index = [_tagButtons indexOfObject:sender];
+    [self.delegate tagDidPressing:index];
 }
+
 #pragma mark action
 
-- (void)addTags:(NSArray *)tags{
+- (void)addTags:(NSArray *)tags
+{
     _isInit=YES;
-    for (NSString *tag in tags)
-    {
+    for (NSString *tag in tags) {
         [self addTagToLast:tag];
     }
     [self layoutTagviews];
     _isInit=NO;
 }
-- (void)addTags:(NSArray *)tags selectedTags:(NSArray*)selectedTags{
+
+- (void)addTags:(NSArray *)tags selectedTags:(NSArray*)selectedTags
+{
     [self addTags:tags];
     self.tagStringsSelected=[NSMutableArray arrayWithArray:selectedTags];
 }
-- (void)addTagToLast:(NSString *)tag{
+
+- (void)addTagToLast:(NSString *)tag
+{
     NSArray *result = [_tagStrings filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@", tag]];
-    if (result.count == 0)
-    {
+    if (result.count == 0) {
         [_tagStrings addObject:tag];
         
         EYCheckBoxButton* tagButton=[self tagButtonWithTag:tag];
-        if (self.tagStrings.count == 3)
-            tagButton.linkStatus = 2;
         [tagButton addTarget:self action:@selector(handlerButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_svContainer addSubview:tagButton];
         [_tagButtons addObject:tagButton];
@@ -465,7 +442,9 @@
     }
     [self layoutTagviews];
 }
-- (void)removeAllTags{
+
+- (void)removeAllTags
+{
     _isInit=YES;
     [_tagStrings removeAllObjects];
     for (UIView* v in _tagArrows) {
@@ -480,20 +459,24 @@
     [self layoutTagviews];
     _isInit=NO;
 }
-- (void)removeTags:(NSArray *)tags{
-    for (NSString *tag in tags)
-    {
+
+- (void)removeTags:(NSArray *)tags
+{
+    for (NSString *tag in tags) {
         [self removeTag:tag];
     }
     [self layoutTagviews];
 }
-- (void)removeTagWithIndex:(NSInteger)index{
+
+- (void)removeTagWithIndex:(NSInteger)index
+{
     [self removeTag:_tagStrings[index]];
 }
-- (void)removeTag:(NSString *)tag{
+
+- (void)removeTag:(NSString *)tag
+{
     NSArray *result = [_tagStrings filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@", tag]];
-    if (result)
-    {
+    if (result) {
         NSInteger index=[_tagStrings indexOfObject:tag];
         [_tagStrings removeObjectAtIndex:index];
         [_tagButtons[index] removeFromSuperview];
@@ -502,17 +485,19 @@
     [self layoutTagviews];
 }
 
-
--(void)handlerButtonAction:(EYCheckBoxButton*)tagButton{
+- (void)handlerButtonAction:(EYCheckBoxButton*)tagButton
+{
+    /*
     switch (_type) {
         case EYTagView_Type_Edit:
         case EYTagView_Type_Edit_Only_Delete:
         {
+            
             [self becomeFirstResponder];
             _editingTagIndex=[_tagButtons indexOfObject:tagButton];
             CGRect buttonFrame=tagButton.frame;
             buttonFrame.size.height-=5;
-            /*
+            
             UIMenuController *menuController = [UIMenuController sharedMenuController];
             UIMenuItem *resetMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(deleteItemClicked:)];
             
@@ -520,7 +505,6 @@
             [menuController setMenuItems:[NSArray arrayWithObject:resetMenuItem]];
             [menuController setTargetRect:buttonFrame inView:_svContainer];
             [menuController setMenuVisible:YES animated:YES];
-             */
         }
             break;
         case EYTagView_Type_Single_Selected:
@@ -565,11 +549,12 @@
             
         }
             break;
-    }
+    }*/
     
 }
 
--(void)finishEditing{
+-(void)finishEditing
+{
     /*
     if ((_type==EYTagView_Type_Edit || _type==EYTagView_Type_Multi_Selected_Edit) &&
         _tfInput.isFirstResponder && _tfInput.text) {
@@ -585,7 +570,8 @@
     [self.tfInput resignFirstResponder];
 }
 
--(NSArray *)getTagTexts{
+-(NSArray *)getTagTexts
+{
     NSMutableArray *texts = [NSMutableArray array];
     for (UIButton *bt in self.tagButtons) {
         if (bt.selected) {
@@ -597,8 +583,8 @@
 
 #pragma mark UITextFieldDelegate
 
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     [textField resignFirstResponder];
     if (!textField.text
         || [textField.text isEqualToString:@""]) {
@@ -610,11 +596,13 @@
     return NO;
 }
 
--(void)textFieldDidChange:(UITextField*)textField{
+-(void)textFieldDidChange:(UITextField*)textField
+{
     [self layoutTagviews];
 }
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     NSString* sting2= [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     CGRect frame=_tfInput.frame;
@@ -629,37 +617,47 @@
         return YES;
     }
 }
--(void)textFieldDidBeginEditing:(UITextField *)textField{
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
     if (_delegate && [_delegate respondsToSelector:@selector(tagDidBeginEditing:)]) {
         [_delegate tagDidBeginEditing:self];
     }
 }
 
 
--(void)textFieldDidEndEditing:(UITextField *)textField{
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
     if (_delegate && [_delegate respondsToSelector:@selector(tagDidEndEditing:)]) {
         [_delegate tagDidEndEditing:self];
     }
 }
 #pragma mark UIMenuController
 
-- (void) deleteItemClicked:(id) sender {
+- (void) deleteItemClicked:(id) sender
+{
     if (_delegate && [_delegate respondsToSelector:@selector(willRemoveTag:index:)]) {
         if ([_delegate willRemoveTag:self index:_editingTagIndex]) {
             [self removeTag:_tagStrings[_editingTagIndex]];
         }
     }
 }
-- (BOOL) canPerformAction:(SEL)selector withSender:(id) sender {
+
+- (BOOL) canPerformAction:(SEL)selector withSender:(id) sender
+{
     if (selector == @selector(deleteItemClicked:) /*|| selector == @selector(copy:)*/ /*<--enable that if you want the copy item */) {
         return YES;
     }
     return NO;
 }
-- (BOOL) canBecomeFirstResponder {
+
+- (BOOL) canBecomeFirstResponder
+{
     return YES;
 }
-- (void)handlerTapGesture:(UIPanGestureRecognizer *)recognizer {
+
+- (void)handlerTapGesture:(UIPanGestureRecognizer *)recognizer
+{
     [[UIMenuController sharedMenuController] setMenuVisible:NO animated:YES];
     /*
     if ((_type==EYTagView_Type_Edit || _type==EYTagView_Type_Multi_Selected_Edit)
@@ -675,12 +673,16 @@
         }
     }*/
 }
+
 #pragma mark getter & setter
--(void)setBackgroundColor:(UIColor *)backgroundColor{
+-(void)setBackgroundColor:(UIColor *)backgroundColor
+{
     [super setBackgroundColor:backgroundColor];
     _svContainer.backgroundColor=backgroundColor;
 }
--(void)setType:(EYTagView_Type)type{
+
+-(void)setType:(EYTagView_Type)type
+{
     _type=type;
     if (_type==EYTagView_Type_Display
         || _type==EYTagView_Type_Flow) {
@@ -727,12 +729,12 @@
     }
     [self layoutTagviews];
 }
--(void)setAllTagBackground:(tagRemote *)tagRemotes {
+
+-(void)setAllTagBackground:(tagRemote *)tagRemotes
+{
     int i = 0;
     for (EYCheckBoxButton* button in _tagButtons) {
-        button.linkStatus = tagRemotes[i].found;
-        i++;
-        switch (button.linkStatus) {
+        switch (tagRemotes[i].found) {
             case 0:
                 button.colorBg=_colorTagBgDisconnect;
                 button.selected = YES;
@@ -746,16 +748,20 @@
                 button.selected = YES;
                 break;
         }
-   
+        i++;
     }
 }
--(void)setColorTag:(UIColor *)colorTag{
+
+-(void)setColorTag:(UIColor *)colorTag
+{
     _colorTag=colorTag;
     for (EYCheckBoxButton* button in _tagButtons) {
         button.colorText=colorTag;
     }
 }
--(void)setTagStringsSelected:(NSMutableArray *)tagStringsSelected{
+
+-(void)setTagStringsSelected:(NSMutableArray *)tagStringsSelected
+{
     _tagStringsSelected=tagStringsSelected;
     switch (_type) {
         case EYTagView_Type_Single_Selected:
@@ -773,15 +779,20 @@
             break;
     }
 }
+
 #pragma mark autolayout
--(CGSize)intrinsicContentSize{//UIViewNoIntrinsicMetric
+-(CGSize)intrinsicContentSize //UIViewNoIntrinsicMetric
+{
     if (_numberOfLines==0) {
         return CGSizeMake(UIViewNoIntrinsicMetric, _newHeight);
     } else {
         return CGSizeMake((_tagPaddingSize.height+_tagHeight)*_numberOfLines+_tagPaddingSize.height, _newHeight);
     }
 }
--(void)layoutSubviews{
+
+-(void)layoutSubviews
+{
     [self layoutTagviews];
 }
+
 @end
