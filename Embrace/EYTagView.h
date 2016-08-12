@@ -46,7 +46,8 @@ alpha:1.0]
 
 - (void)tagDidBeginEditing:(EYTagView*)tagView;
 - (void)tagDidEndEditing:(EYTagView*)tagView;
-- (void)tagDidPressing:(NSInteger)index;
+- (void)tagDidClicked:(NSInteger)index;
+- (void)tagSearch;
 
 /**
  *  @return whether delete
@@ -68,7 +69,7 @@ typedef struct
 {
     __unsafe_unretained NSString *name;
     unsigned long serial;
-    unsigned long mfgData;
+    unsigned long mfgID;
     unsigned int lastSeen;
     unsigned long major;
     unsigned long minor;
@@ -76,6 +77,19 @@ typedef struct
     unsigned int found;
     unsigned int index;
 } tagRemote;
+/*
+@interface tagRemotes : NSObject {
+    NSString    *name;
+    NSUInteger  serial;
+    NSNumber    *mfgID;
+    NSUInteger  lastSeen;
+    NSNumber    *major;
+    NSNumber    *minor;
+    NSUInteger  enable;
+    NSUInteger  found;
+    NSUInteger  index;
+}
+@end */
 
 @interface EYTagView : UIView
 @property (nonatomic, strong) id<EYTagViewDelegate> delegate;
@@ -119,6 +133,7 @@ typedef struct
 - (void)addTags:(NSArray *)tags;
 - (void)addTags:(NSArray *)tags selectedTags:(NSArray*)selectedTags;
 - (void)addTagToLast:(NSString *)tag;
+- (void)addTagToLastWithIndex:(NSString *)tag index:(NSInteger)index;
 - (NSArray *)getTagTexts;
 - (void)removeAllTags;
 - (void)removeTag:(NSString *)tag;

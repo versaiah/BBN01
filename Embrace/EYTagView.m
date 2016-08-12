@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UIColor* colorText;
 @property (nonatomic, strong) UIColor* colorTagUnSelected;
 @property (nonatomic, strong) UIColor* colorTagBorder;
+@property (nonatomic) NSInteger index;
 @end
 
 @implementation EYCheckBoxButton
@@ -117,17 +118,17 @@
     
     UIButton *tf = [UIButton buttonWithType:UIButtonTypeCustom];
     tf.frame = CGRectMake(0, 0, 0, _tagHeight);
-    [tf setBackgroundImage:[UIImage imageNamed:@"ImageAddBTN"] forState:UIControlStateNormal];
+    [tf setBackgroundImage:[UIImage imageNamed:@"ImageBTNAdd"] forState:UIControlStateNormal];
     [tf.layer setMasksToBounds:YES];
     [tf.layer setCornerRadius:3];
     [tf setShowsTouchWhenHighlighted:YES];
-    /*
-    UITextField* tf = [[EYTextField alloc] initWithFrame:CGRectMake(0, 0, 0, _tagHeight)];
-    tf.autocorrectionType = UITextAutocorrectionTypeNo;
-    [tf addTarget:self action:@selector(textFieldDidChange:)forControlEvents:UIControlEventEditingChanged];
-    tf.delegate = self;
-    tf.placeholder=EYLOCALSTRING(@"Add Tag");
-    tf.returnKeyType = UIReturnKeyDone; */
+    
+    //UITextField* tf = [[EYTextField alloc] initWithFrame:CGRectMake(0, 0, 0, _tagHeight)];
+    //tf.autocorrectionType = UITextAutocorrectionTypeNo;
+    [tf addTarget:self action:@selector(btnAddClicked:)forControlEvents:UIControlEventTouchUpInside];
+    //tf.delegate = self;
+    //tf.placeholder=EYLOCALSTRING(@"Add Tag");
+    //tf.returnKeyType = UIReturnKeyDone;
     [_svContainer addSubview:tf];
     _tfInput=tf;
     
@@ -289,9 +290,10 @@
         [self layoutTagviews];
         return;
     }
+    
     //input view
-    _tfInput.hidden=(_type!=EYTagView_Type_Edit &&
-                     _type!=EYTagView_Type_Multi_Selected_Edit);
+    //_tfInput.hidden=(_type!=EYTagView_Type_Edit && _type!=EYTagView_Type_Multi_Selected_Edit);
+    
     if (_type==EYTagView_Type_Edit || _type==EYTagView_Type_Multi_Selected_Edit) {
         
         //_tfInput.backgroundColor=_colorInputBg;
@@ -369,14 +371,14 @@
 - (EYCheckBoxButton *)tagButtonWithTag:(NSString *)tag
 {
     EYCheckBoxButton *tagBtn = [[EYCheckBoxButton alloc] init];
-    tagBtn.colorBg=_colorTagBg;
+    tagBtn.colorBg=_colorTagBgDisconnect;
     tagBtn.colorTagUnSelected=_colorTagUnselected;
     tagBtn.colorTagBorder=_colorTagBoard;
     
     tagBtn.colorText=_colorTag;
     tagBtn.selected=YES;
     [tagBtn.titleLabel setFont:_fontTag];
-    [tagBtn setBackgroundColor:_colorTagBg];
+    [tagBtn setBackgroundColor:_colorTagBgDisconnect];
     [tagBtn setTitleColor:_colorTag forState:UIControlStateNormal];
     [tagBtn addTarget:self action:@selector(handlerTagButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
     tagBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -396,8 +398,11 @@
 
 - (void)handlerTagButtonEvent:(EYCheckBoxButton*)sender
 {
-    NSInteger index = [_tagButtons indexOfObject:sender];
-    [self.delegate tagDidPressing:index];
+    NSInteger index;
+   
+    //index = [_tagButtons indexOfObject:sender];
+    index = sender.index;
+    [self.delegate tagDidClicked:index];
 }
 
 #pragma mark action
@@ -416,6 +421,21 @@
 {
     [self addTags:tags];
     self.tagStringsSelected=[NSMutableArray arrayWithArray:selectedTags];
+}
+
+- (void)addTagToLastWithIndex:(NSString *)tag index:(NSInteger)index
+{
+    NSArray *result = [_tagStrings filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@", tag]];
+    if (result.count == 0) {
+        [_tagStrings addObject:tag];
+        
+        EYCheckBoxButton* tagButton=[self tagButtonWithTag:tag];
+        tagButton.index = index;
+        [tagButton addTarget:self action:@selector(handlerButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_svContainer addSubview:tagButton];
+        [_tagButtons addObject:tagButton];
+    }
+    [self layoutTagviews];
 }
 
 - (void)addTagToLast:(NSString *)tag
@@ -582,6 +602,10 @@
 }
 
 #pragma mark UITextFieldDelegate
+-(void)btnAddClicked:(UIButton *)sender
+{
+    [self.delegate tagSearch];
+}
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
@@ -732,9 +756,8 @@
 
 -(void)setAllTagBackground:(tagRemote *)tagRemotes
 {
-    int i = 0;
     for (EYCheckBoxButton* button in _tagButtons) {
-        switch (tagRemotes[i].found) {
+        switch (tagRemotes[button.index-1].found) {
             case 0:
                 button.colorBg=_colorTagBgDisconnect;
                 button.selected = YES;
@@ -743,12 +766,7 @@
                 button.colorBg=_colorTagBg;
                 button.selected = YES;
                 break;
-            case 2:
-                button.colorBg=_colorTagBgDisable;
-                button.selected = YES;
-                break;
         }
-        i++;
     }
 }
 

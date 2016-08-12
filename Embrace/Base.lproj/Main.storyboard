@@ -14,13 +14,96 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="251" y="212"/>
+        </scene>
+        <!--Search Tag View-->
+        <scene sceneID="vS7-Tm-Nzk">
+            <objects>
+                <viewController storyboardIdentifier="SearchTagView" id="uxv-bo-pxT" customClass="SearchTagView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ywc-Fs-izs"/>
+                        <viewControllerLayoutGuide type="bottom" id="Nil-8y-cKd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KmI-j2-tlW">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VTu-GO-uyM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="471" y="212"/>
+        </scene>
+        <!--Active Info View-->
+        <scene sceneID="Wet-xA-6MD">
+            <objects>
+                <viewController storyboardIdentifier="ActiveInfoView" id="73s-b3-ZjJ" customClass="ActiveInfoView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jjq-Rm-n7d"/>
+                        <viewControllerLayoutGuide type="bottom" id="qKJ-cR-dZk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="s1u-Th-2b6">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DGC-Ox-8P0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="471" y="463"/>
+        </scene>
+        <!--Missing Info View-->
+        <scene sceneID="k1a-xF-sqC">
+            <objects>
+                <viewController storyboardIdentifier="MissingInfoView" id="Jxx-K9-xL3" customClass="MissingInfoView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="o39-u9-vvV"/>
+                        <viewControllerLayoutGuide type="bottom" id="nlf-Af-aaR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0ir-5W-jsI">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="y10-Kf-twm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="30" y="463"/>
+        </scene>
+        <!--Inactive Info View-->
+        <scene sceneID="pIr-xB-0Bp">
+            <objects>
+                <viewController storyboardIdentifier="InactiveInfoView" id="0nk-dq-Va6" customClass="InactiveInfoView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dzg-I1-syi"/>
+                        <viewControllerLayoutGuide type="bottom" id="c68-qF-iIM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Hjf-Rx-mK8">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NkH-Hp-1qZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="251" y="463"/>
         </scene>
     </scenes>
 </document>

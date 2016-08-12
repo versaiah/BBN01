@@ -25,7 +25,7 @@ NSTimer     *timer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
     self.cm = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
     
@@ -44,6 +44,7 @@ NSTimer     *timer;
                                             @"*SMI-YYY-XXXX#",
                                             @"*SMF-YYY-XXXX#",
                                             @"*SEN-YYY-X#",
+                                            @"*SEA-X#",
                                             @"*SSI-XX#",
                                             @"*SST-XXX#",
                                             @"*SSS#",
@@ -53,16 +54,17 @@ NSTimer     *timer;
                                             @"*DET-YYY#",
                                             nil];
 
-    UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageMainBG"]];
+    UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGMain"]];
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
 
     _tagRemotes = malloc(sizeof(tagRemote) * MAX_TAGS);
-    _tagRemotes[0].name = @"Notebook";
-    _tagRemotes[1].name = @"Laptop";
-    _tagRemotes[2].name = @"Pen Case";
-    _tagRemotes[3].name = @"Watch";
-    _tagRemotes[4].name = @"Book";
+    memset(_tagRemotes, 0, sizeof(tagRemote) * MAX_TAGS);
+    _tagRemotes[0].name = @"New1";
+    _tagRemotes[1].name = @"New2";
+    _tagRemotes[2].name = @"New3";
+    _tagRemotes[3].name = @"New4";
+    _tagRemotes[4].name = @"New5";
     
     _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                           self.view.bounds.origin.y + 98,
@@ -71,6 +73,7 @@ NSTimer     *timer;
     _tagView.delegate = self;
     _tagView.colorTag = COLORRGB(0xffffff);
     _tagView.colorTagBg = COLORRGB(0x007000);
+    _tagView.colorTagBgDisable = COLORRGB(0x848484);
     _tagView.colorInput = COLORRGB(0x2ab44e);
     _tagView.colorInputBg = COLORRGB(0xffffff);
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
@@ -89,6 +92,7 @@ NSTimer     *timer;
     _tagView2.delegate = self;
     _tagView2.colorTag = COLORRGB(0xffffff);
     _tagView2.colorTagBg = COLORRGB(0x848484);
+    _tagView2.colorTagBgDisconnect = COLORRGB(0x848484);
     _tagView2.colorInput = COLORRGB(0x2ab44e);
     _tagView2.colorInputBg = COLORRGB(0xffffff);
     _tagView2.colorInputPlaceholder = COLORRGB(0x2ab44e);
@@ -101,6 +105,13 @@ NSTimer     *timer;
     [self.view addSubview:_tagView2];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (animated) {
+        
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -109,7 +120,7 @@ NSTimer     *timer;
 
 - (void)heightDidChangedTagView:(EYTagView *)tagView
 {
-    NSLog(@"heightDidChangedTagView");
+    //NSLog(@"heightDidChangedTagView");
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
@@ -193,29 +204,30 @@ NSTimer     *timer;
 
 - (void)didReadyToGo
 {
-    [self sendCmdToController:GET_ENABLE];
-    [self sendCmdToController:GET_MAJOR];
-    [self sendCmdToController:GET_MINOR];
-    [self sendCmdToController:GET_MFG_DATA];
-    [self sendCmdToController:GET_FOUND];
+    [self sendCmdToController:GET_TAG_COUNT Index:0];
+    [self sendCmdToController:GET_ENABLE Index:0];
+    [self sendCmdToController:GET_MAJOR Index:0];
+    [self sendCmdToController:GET_MINOR Index:0];
+    [self sendCmdToController:GET_MFG_DATA Index:0];
+    [self sendCmdToController:GET_FOUND Index:0];
 }
 
 - (void)didReceiveData:(NSString *)string
 {
     NSRange searchResult;
     NSString *tmp;
-    unsigned long red;
+    unsigned long lonTmp;
     
     NSLog(@"===%@===", string);
     if (string == NULL) {
-        [self sendCmdToController:targetCmd];
+        //[self sendCmdToController:targetCmd Index:0];
         return;
     }
     
     searchResult = [string rangeOfString:@"MISSING"];
     if (searchResult.location != NSNotFound) {
         if (tagNotify == 0) {
-            [self sendCmdToController:GET_FOUND];
+            [self sendCmdToController:GET_FOUND Index:0];
             tagNotify = 9;
         }
         tagNotify--;
@@ -235,11 +247,10 @@ NSTimer     *timer;
     searchResult = [string rangeOfString:@"*GMA-"];
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
-        red = strtoul([tmp UTF8String],0,16);
-        _tagRemotes[tagResp].major = red;
+        lonTmp = strtoul([tmp UTF8String],0,16);
+        //_tagRemotes[tagResp].major = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
-            //[self reNewButtonStatus];
             tagResp = 0;
         }
     }
@@ -247,24 +258,25 @@ NSTimer     *timer;
     searchResult = [string rangeOfString:@"*GMI-"];
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
-        red = strtoul([tmp UTF8String],0,16);
-        _tagRemotes[tagResp].minor = red;
+        lonTmp = strtoul([tmp UTF8String],0,16);
+        //_tagRemotes[tagResp].minor = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
             //[self reNewButtonStatus];
             tagResp = 0;
-            [self addTags];
+            //[_tagView removeAllTags];
+            //[_tagView2 removeAllTags];
+            //[self addTags];
         }
     }
     
     searchResult = [string rangeOfString:@"*GMF-"];
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
-        red = strtoul([tmp UTF8String],0,16);
-        _tagRemotes[tagResp].minor = red;
+        lonTmp = strtoul([tmp UTF8String],0,16);
+        //_tagRemotes[tagResp].mfgID = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
-            //[self reNewButtonStatus];
             tagResp = 0;
         }
     }
@@ -272,11 +284,10 @@ NSTimer     *timer;
     searchResult = [string rangeOfString:@"*GEN-"];
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
-        _tagRemotes[tagResp].enable = [tmp integerValue];
+        //_tagRemotes[tagResp].enable = [tmp integerValue];
+        //_tagRemotes[tagResp].index = tagResp + 1;
         tagResp++;
-        _tagRemotes[tagResp].index = tagResp;
         if (tagResp == MAX_TAGS) {
-            //[self reNewButtonStatus];
             tagResp = 0;
         }
     }
@@ -285,12 +296,12 @@ NSTimer     *timer;
     if (searchResult.location != NSNotFound) {
         searchResult = [string rangeOfString:@"OK"];
         if (searchResult.location == NSNotFound) {
-            [self sendCmdToController:targetCmd];
+            //[self sendCmdToController:targetCmd Index:0];
         }
     }
 }
 
-- (void)sendCmdToController: (int)command
+- (void)sendCmdToController: (NSInteger)command Index:(NSInteger)index
 {
     NSString *tmp1, *tmp2;
     
@@ -299,7 +310,6 @@ NSTimer     *timer;
     
     switch (command) {
         case GET_SERIAL:
-            
             break;
         case GET_MAJOR:
             for (int i = 0; i < MAX_TAGS; i++) {
@@ -342,28 +352,45 @@ NSTimer     *timer;
             }
             break;
         case GET_LAST_SEEN:
-            
             break;
         case SET_SERIAL:
-            
             break;
         case SET_MAJOR:
-            
+            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
+            tmp2 = [NSString stringWithFormat: @"%04lX", _tagRemotes[index-1].major];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
             break;
         case SET_MINOR:
-            
+            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
+            tmp2 = [NSString stringWithFormat: @"%04lX", _tagRemotes[index-1].minor];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
             break;
-        case SET_MFG_DATA:
-            
+        case SET_MFG_ID:
+            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
+            tmp2 = [NSString stringWithFormat: @"%04lX", _tagRemotes[index-1].mfgID];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
             break;
         case SET_ENABLE:
-            
+            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
+            tmp2 = [NSString stringWithFormat: @"%1d", _tagRemotes[index-1].enable];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"X" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
+            break;
+        case SET_ENABLE_ALL:
+            tmp2 = [NSString stringWithFormat: @"%1d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"X" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
             break;
         case SET_SCAN_INTERVAL:
-            
             break;
         case SET_SCAN_TIMEOUT:
-            
             break;
         case GET_TAG_COUNT:
         case GET_BATTERY:
@@ -373,25 +400,26 @@ NSTimer     *timer;
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_SENSITIVITY:
-            
             break;
         case SET_NOTIFICATION:
-            
+            break;
+        case DEL_TAG:
+            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
+            break;
+        case DEL_ALL_TAG:
             break;
             
         default:
             break;
     }
     NSLog(@"%@", tmp1);
+    usleep(10000);
 }
 
 - (void)reNewButtonStatus
 {
-    int index[MAX_TAGS];
-    
-    for (int i = 0; i < MAX_TAGS; i++) {
-        index[i] = _tagRemotes[i].found;
-    }
     [_tagView setAllTagBackground:_tagRemotes];
 }
 
@@ -400,18 +428,125 @@ NSTimer     *timer;
     NSString *tmp;
     
     for (int i = 0; i < MAX_TAGS; i++) {
-        tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04lX", _tagRemotes[i].name, i, _tagRemotes[i].minor];
+        if (_tagRemotes[i].index == 0) continue;
+
+        tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04lX", _tagRemotes[i].name, _tagRemotes[i].index, _tagRemotes[i].minor];
         if (_tagRemotes[i].enable == 1) {
-            [_tagView addTagToLast:tmp];
+            [_tagView addTagToLastWithIndex:tmp index:_tagRemotes[i].index];
         } else {
-            [_tagView2 addTagToLast:tmp];
+            [_tagView2 addTagToLastWithIndex:tmp index:_tagRemotes[i].index];
         }
+    }
+    if (_tagCount == MAX_TAGS) {
+        _tagView.tfInput.hidden = TRUE;
+    }
+    [self reNewButtonStatus];
+}
+
+- (void)tagDidClicked:(NSInteger)index
+{
+    if (_tagRemotes[index- 1].enable) {
+        if (_tagRemotes[index -1].found) {
+            ActiveInfoView *activeInfoView = [self.storyboard instantiateViewControllerWithIdentifier:@"ActiveInfoView"];
+            activeInfoView.tagRemotes = self.tagRemotes[index - 1];
+            activeInfoView.delegate = self;
+            [self presentViewController:activeInfoView animated:YES completion:nil];
+        } else {
+            MissingInfoView *missingInfoView = [self.storyboard instantiateViewControllerWithIdentifier:@"MissingInfoView"];
+            missingInfoView.tagRemotes = self.tagRemotes[index - 1];
+            missingInfoView.delegate = self;
+            [self presentViewController:missingInfoView animated:YES completion:nil];
+        }
+    } else {
+        InactiveInfoView *inactiveInfoView = [self.storyboard instantiateViewControllerWithIdentifier:@"InactiveInfoView"];
+        inactiveInfoView.tagRemotes = self.tagRemotes[index - 1];
+        inactiveInfoView.delegate = self;
+        [self presentViewController:inactiveInfoView animated:YES completion:nil];
     }
 }
 
-- (void)tagDidPressing:(NSInteger)index
+- (void)tagDisable:(NSInteger)index
 {
-    //[self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
+    _tagRemotes[index-1].enable = 0;
+    [self sendCmdToController:SET_ENABLE Index:index];
+    [_tagView removeAllTags];
+    [_tagView2 removeAllTags];
+    [self addTags];
+}
+
+- (void)tagEnable:(NSInteger)index
+{
+    _tagRemotes[index-1].enable = 1;
+    [self sendCmdToController:SET_ENABLE Index:index];
+    [_tagView removeAllTags];
+    [_tagView2 removeAllTags];
+    [self addTags];
+}
+
+- (void)tagSearch
+{
+    SearchTagView *searchTagView = [self.storyboard instantiateViewControllerWithIdentifier:@"SearchTagView"];
+    searchTagView.delegate = self;
+    [self presentViewController:searchTagView animated:YES completion:nil];
+}
+
+- (void)tagAddAfterSearch:(tagRemote *)tagTarget
+{
+    NSInteger index = [self checkEmptytags];
+    
+    _tagRemotes[index].enable = 1;
+    _tagRemotes[index].index = index + 1;
+    _tagRemotes[index].major = tagTarget->major;
+    _tagRemotes[index].mfgID = tagTarget->mfgID;
+    _tagRemotes[index].minor = tagTarget->minor;
+    _tagRemotes[index].found = 0;
+    _tagCount++;
+    
+    [self sendCmdToController:SET_MFG_ID Index:index+1];
+    [self sendCmdToController:SET_MAJOR Index:index+1];
+    [self sendCmdToController:SET_MINOR Index:index+1];
+    [self sendCmdToController:SET_ENABLE Index:index+1];
+    
+    [_tagView removeAllTags];
+    [_tagView2 removeAllTags];
+    [self addTags];
+}
+
+- (void)tagRemove:(NSInteger)index
+{
+    NSString *tmp;
+    
+    tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04lX", _tagRemotes[index-1].name, _tagRemotes[index-1].index, _tagRemotes[index-1].minor];
+    if (_tagRemotes[index-1].enable == 1) {
+        [_tagView removeTag:tmp];
+    } else {
+        [_tagView2 removeTag:tmp];
+    }
+    
+    _tagRemotes[index-1].enable = 0;
+    _tagRemotes[index-1].index = 0;
+    _tagRemotes[index-1].major = 0;
+    _tagRemotes[index-1].mfgID = 0;
+    _tagRemotes[index-1].minor = 0;
+    _tagRemotes[index-1].found = 0;
+    _tagCount--;
+    
+    [self sendCmdToController:DEL_TAG Index:index];
+    
+    if (_tagCount < MAX_TAGS) {
+        _tagView.tfInput.hidden = FALSE;
+    }
+}
+
+- (NSInteger)checkEmptytags
+{
+    for (int i = 0; i < MAX_TAGS; i++) {
+        if ((_tagRemotes[i].index == 0) && (_tagRemotes[i].mfgID == 0)) {
+            return i;
+        }
+    }
+    
+    return -1;
 }
 
 @end
