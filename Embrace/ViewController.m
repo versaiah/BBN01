@@ -22,6 +22,7 @@ NSInteger   tagResp;
 NSInteger   targetCmd;
 NSInteger   sendCmdStatus;
 NSTimer     *timer;
+NSString    *nameString;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -57,14 +58,9 @@ NSTimer     *timer;
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGMain"]];
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
-
-    _tagRemotes = malloc(sizeof(tagRemote) * MAX_TAGS);
+    
+    _tagRemotes = (tagRemote *)malloc(sizeof(tagRemote) * MAX_TAGS);
     memset(_tagRemotes, 0, sizeof(tagRemote) * MAX_TAGS);
-    _tagRemotes[0].name = @"New1";
-    _tagRemotes[1].name = @"New2";
-    _tagRemotes[2].name = @"New3";
-    _tagRemotes[3].name = @"New4";
-    _tagRemotes[4].name = @"New5";
     
     _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                           self.view.bounds.origin.y + 98,
@@ -490,15 +486,17 @@ NSTimer     *timer;
     [self presentViewController:searchTagView animated:YES completion:nil];
 }
 
-- (void)tagAddAfterSearch:(tagRemote *)tagTarget
+- (void)tagAddAfterSearch:(NSString *)tagName major:(unsigned long)tagMajor minor:(unsigned long)tagMinor
 {
     NSInteger index = [self checkEmptytags];
     
     _tagRemotes[index].enable = 1;
     _tagRemotes[index].index = index + 1;
-    _tagRemotes[index].major = tagTarget->major;
-    _tagRemotes[index].mfgID = tagTarget->mfgID;
-    _tagRemotes[index].minor = tagTarget->minor;
+    _tagRemotes[index].major = tagMajor;
+    _tagRemotes[index].mfgID = 0x5900;
+    _tagRemotes[index].minor = tagMinor;
+    _tagName = [[NSString alloc] initWithString:tagName];
+    _tagRemotes[index].name = _tagName;
     _tagRemotes[index].found = 0;
     _tagCount++;
     

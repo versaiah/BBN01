@@ -11,7 +11,7 @@
 #import "UARTPeripheral.h"
 
 @protocol SearchTagViewDelegate
-- (void)tagAddAfterSearch:(tagRemote *)tagTarget;
+- (void)tagAddAfterSearch:(NSString *)tagName major:(unsigned long)tagMajor minor:(unsigned long)tagMinor;
 @end
 
 @interface SearchTagView : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate>
@@ -23,5 +23,6 @@
 @property UARTPeripheral *currentPeripheral;
 @property tagRemote *tagRemotes;
 @property NSInteger tagCount;
+@property (nonatomic, copy) NSString *tagName;
 
 @end

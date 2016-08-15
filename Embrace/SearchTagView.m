@@ -79,9 +79,13 @@ NSTimer *timerSearch;
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
 
-    
-    _tagRemotes = malloc(sizeof(tagRemote) * MAX_TAGS);
+    _tagRemotes = (tagRemote *)malloc(sizeof(tagRemote) * MAX_TAGS);
     memset(_tagRemotes, 0, sizeof(tagRemote) * MAX_TAGS);
+}
+
+- (void)viewWillUnload
+{
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -122,6 +126,10 @@ NSTimer *timerSearch;
                 _tagRemotes[_tagCount].major = strtoul([strTmp UTF8String],0,16);
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
                 _tagRemotes[_tagCount].minor = strtoul([strTmp UTF8String],0,16);
+                strTmp = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
+                _tagName = [[NSString alloc] initWithString:strTmp];
+                _tagName = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
+                _tagRemotes[_tagCount].name = _tagName;
                 _tagRemotes[_tagCount].index = _tagCount + 1;
                 _tagCount++;
             }
@@ -188,7 +196,7 @@ NSTimer *timerSearch;
 
 - (void)tagDidClicked:(NSInteger)index
 {
-    [self.delegate tagAddAfterSearch:&_tagRemotes[index-1]];
+    [self.delegate tagAddAfterSearch:_tagRemotes[index-1].name major:_tagRemotes[index-1].major minor:_tagRemotes[index-1].minor];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];}
 
 /*

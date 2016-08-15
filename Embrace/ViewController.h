@@ -23,6 +23,7 @@
 @property UARTPeripheral *currentPeripheral;
 @property tagRemote *tagRemotes;
 @property NSInteger tagCount;
+@property (nonatomic, copy) NSString *tagName;
 
 @end
 
