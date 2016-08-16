@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EYTagView.h"
+#import "tagRemote.h"
 
 @protocol InactiveInfoViewDelegate
 - (void)tagEnable:(NSInteger)index;
@@ -16,6 +17,6 @@
 
 @interface InactiveInfoView : UIViewController
 @property (nonatomic, strong) id<InactiveInfoViewDelegate> delegate;
-@property tagRemote tagRemotes;
+@property tagRemote *tagRemotes;
 
 @end

@@ -13,6 +13,7 @@
 #import "InActiveInfoView.h"
 #import "MissingInfoView.h"
 #import "SearchTagView.h"
+#import "tagRemote.h"
 
 @interface ViewController : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate, ActiveInfoViewDelegate, MissingInfoViewDelegate, InactiveInfoViewDelegate, SearchTagViewDelegate>
 
@@ -21,9 +22,8 @@
 @property CBCentralManager *cm;
 @property ConnectionState state;
 @property UARTPeripheral *currentPeripheral;
-@property tagRemote *tagRemotes;
+@property NSMutableArray *tagArray;
 @property NSInteger tagCount;
-@property (nonatomic, copy) NSString *tagName;
 
 @end
 

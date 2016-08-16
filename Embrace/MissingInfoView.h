@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EYTagView.h"
+#import "tagRemote.h"
 
 @protocol MissingInfoViewDelegate
 - (void)tagDisable:(NSInteger)index;
@@ -16,6 +17,6 @@
 
 @interface MissingInfoView : UIViewController
 @property (nonatomic, strong) id<MissingInfoViewDelegate> delegate;
-@property tagRemote tagRemotes;
+@property tagRemote *tagRemotes;
 
 @end

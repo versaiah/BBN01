@@ -10,6 +10,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "tagRemote.h"
 
 #define COLORRGBA(c,a) [UIColor colorWithRed:((c>>16)&0xFF)/255.0	\
 green:((c>>8)&0xFF)/255.0	\
@@ -65,32 +66,6 @@ typedef enum{
     EYTagView_Type_Flow,
 }EYTagView_Type;
 
-typedef struct
-{
-    __unsafe_unretained NSString *name;
-    unsigned long serial;
-    unsigned long mfgID;
-    unsigned int lastSeen;
-    unsigned long major;
-    unsigned long minor;
-    unsigned int enable;
-    unsigned int found;
-    unsigned int index;
-} tagRemote;
-/*
-@interface tagRemotes : NSObject {
-    NSString    *name;
-    NSUInteger  serial;
-    NSNumber    *mfgID;
-    NSUInteger  lastSeen;
-    NSNumber    *major;
-    NSNumber    *minor;
-    NSUInteger  enable;
-    NSUInteger  found;
-    NSUInteger  index;
-}
-@end */
-
 @interface EYTagView : UIView
 @property (nonatomic, strong) id<EYTagViewDelegate> delegate;
 @property (nonatomic, strong) UIButton* tfInput;
@@ -142,5 +117,5 @@ typedef struct
 - (void)setTagStringsSelected:(NSMutableArray *)tagStringsSelected;
 - (NSMutableArray *)tagStrings;
 - (void)finishEditing;
-- (void)setAllTagBackground:(tagRemote *)tagRemotes;
+- (void)setAllTagBackground:(NSMutableArray *)tagArray;
 @end

@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "EYTagView.h"
 #import "UARTPeripheral.h"
+#import "tagRemote.h"
 
 @protocol SearchTagViewDelegate
-- (void)tagAddAfterSearch:(NSString *)tagName major:(unsigned long)tagMajor minor:(unsigned long)tagMinor;
+- (void)tagAddAfterSearch:(tagRemote *)tagTarget;
 @end
 
 @interface SearchTagView : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate>
@@ -21,8 +22,6 @@
 @property CBCentralManager *cm;
 @property ConnectionState state;
 @property UARTPeripheral *currentPeripheral;
-@property tagRemote *tagRemotes;
-@property NSInteger tagCount;
-@property (nonatomic, copy) NSString *tagName;
+@property NSMutableArray *tagArray;
 
 @end

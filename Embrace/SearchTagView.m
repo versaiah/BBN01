@@ -79,8 +79,7 @@ NSTimer *timerSearch;
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
 
-    _tagRemotes = (tagRemote *)malloc(sizeof(tagRemote) * MAX_TAGS);
-    memset(_tagRemotes, 0, sizeof(tagRemote) * MAX_TAGS);
+    _tagArray = [[NSMutableArray alloc]init];
 }
 
 - (void)viewWillUnload
@@ -115,23 +114,23 @@ NSTimer *timerSearch;
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
     NSData *advData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
+    tagRemote *tagTmp;
+    
     if (advData != nil) {
         unsigned char *digest = (unsigned char *)[advData bytes];
         NSString *strTmp = [NSString stringWithFormat:@"%02X%02X", digest[0], digest[1]];
         if (strTmp != nil) {
             unsigned long lonTmp = strtoul([strTmp UTF8String],0,16);
-            if ((lonTmp == 0x5900) && (_tagCount < MAX_TAGS)) {
-                _tagRemotes[_tagCount].mfgID = lonTmp;
+            if ((lonTmp == 0x5900) && (_tagArray.count < MAX_TAGS)) {
+                tagTmp = [[tagRemote alloc] init];
+                tagTmp.mfgID = lonTmp;
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
-                _tagRemotes[_tagCount].major = strtoul([strTmp UTF8String],0,16);
+                tagTmp.major = strtoul([strTmp UTF8String],0,16);
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
-                _tagRemotes[_tagCount].minor = strtoul([strTmp UTF8String],0,16);
-                strTmp = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
-                _tagName = [[NSString alloc] initWithString:strTmp];
-                _tagName = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
-                _tagRemotes[_tagCount].name = _tagName;
-                _tagRemotes[_tagCount].index = _tagCount + 1;
-                _tagCount++;
+                tagTmp.minor = strtoul([strTmp UTF8String],0,16);
+                tagTmp.name = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
+                tagTmp.index = _tagArray.count + 1;
+                [_tagArray addObject:tagTmp];
             }
         }
     }
@@ -186,17 +185,20 @@ NSTimer *timerSearch;
 - (void)addTags
 {
     NSString *tmp;
+    tagRemote *tagTmp;
     
-    for (int i = 0; i < _tagCount; i++) {
-        tmp = [NSString stringWithFormat: @"New\n                \n%04lX", _tagRemotes[i].minor];
-        [_tagView addTagToLastWithIndex:tmp index:_tagRemotes[i].index];
+    for (int i = 0; i < _tagArray.count; i++) {
+        tagTmp = _tagArray[i];
+        tmp = [NSString stringWithFormat: @"New\n                \n%04X", tagTmp.minor];
+        [_tagView addTagToLastWithIndex:tmp index:tagTmp.index];
     }
      _tagView.hidden = FALSE;
 }
 
 - (void)tagDidClicked:(NSInteger)index
 {
-    [self.delegate tagAddAfterSearch:_tagRemotes[index-1].name major:_tagRemotes[index-1].major minor:_tagRemotes[index-1].minor];
+    tagRemote *tagTmp = _tagArray[index-1];
+    [self.delegate tagAddAfterSearch:tagTmp];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];}
 
 /*

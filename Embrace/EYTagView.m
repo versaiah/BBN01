@@ -754,10 +754,13 @@
     [self layoutTagviews];
 }
 
--(void)setAllTagBackground:(tagRemote *)tagRemotes
+-(void)setAllTagBackground:(NSMutableArray *)tagArray
 {
+    tagRemote *tagTmp;
+    
     for (EYCheckBoxButton* button in _tagButtons) {
-        switch (tagRemotes[button.index-1].found) {
+        tagTmp = tagArray[button.index-1];
+        switch (tagTmp.found) {
             case 0:
                 button.colorBg=_colorTagBgDisconnect;
                 button.selected = YES;

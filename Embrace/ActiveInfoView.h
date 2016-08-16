@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EYTagView.h"
+#import "tagRemote.h"
 
 @protocol ActiveInfoViewDelegate
 - (void)tagDisable:(NSInteger)index;
@@ -16,6 +17,6 @@
 
 @interface ActiveInfoView : UIViewController
 @property (nonatomic, strong) id <ActiveInfoViewDelegate> delegate;
-@property tagRemote tagRemotes;
+@property tagRemote *tagRemotes;
 
 @end
