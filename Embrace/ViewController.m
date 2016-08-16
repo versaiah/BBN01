@@ -12,6 +12,8 @@
 
 @end
 
+NSString *const KADDataPlist = @"tag.plist";
+
 @implementation ViewController
 @synthesize cm = _cm;
 @synthesize currentPeripheral = _currentPeripheral;
@@ -58,13 +60,6 @@ NSTimer     *timer;
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
     
-    _tagArray = [[NSMutableArray alloc]init];
-    tagRemote *tagTmp;
-    for (int i = 0; i < MAX_TAGS; ++i) {
-        tagTmp = [[tagRemote alloc] init];
-        [_tagArray addObject:tagTmp];
-    }
-    
     _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
                                                           self.view.bounds.origin.y + 98,
                                                           self.view.bounds.size.width - 55,
@@ -102,6 +97,11 @@ NSTimer     *timer;
     
     [_tagView2 layoutTagviews];
     [self.view addSubview:_tagView2];
+    
+    _tagArray = [self loadDataFromFile];
+    if (_tagArray != nil) {
+        [self addTags];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -449,6 +449,7 @@ NSTimer     *timer;
         _tagView.tfInput.hidden = TRUE;
     }
     [self reNewButtonStatus];
+    [self saveDataToFile:_tagArray];
 }
 
 - (void)tagDidClicked:(NSInteger)index
@@ -556,6 +557,7 @@ NSTimer     *timer;
     if (_tagCount < MAX_TAGS) {
         _tagView.tfInput.hidden = FALSE;
     }
+    [self saveDataToFile:_tagArray];
 }
 
 - (NSInteger)checkEmptytags
@@ -571,6 +573,42 @@ NSTimer     *timer;
     }
     
     return -1;
+}
+
+- (void)saveDataToFile:(NSArray *)tagArray
+{
+    NSString *filePath = [self filePathOfDocument:KADDataPlist];
+    [NSKeyedArchiver archiveRootObject:tagArray toFile:filePath];
+}
+
+- (NSMutableArray *)loadDataFromFile
+{
+    NSMutableArray *arrayTmp;
+    tagRemote *tagTmp;
+    
+    NSString *filePath = [self filePathOfDocument:KADDataPlist];
+    arrayTmp = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+    
+    if (arrayTmp == nil) {
+        arrayTmp = [[NSMutableArray alloc]init];
+        for (int i = 0; i < MAX_TAGS; ++i) {
+            tagTmp = [[tagRemote alloc] init];
+            [arrayTmp addObject:tagTmp];
+        }
+    } else {
+        for (int i = 0; i < MAX_TAGS; ++i) {
+            tagTmp = arrayTmp[i];
+            tagTmp.found = 0;
+        }
+    }
+    return arrayTmp;
+}
+
+- (NSString *)filePathOfDocument:(NSString *)filename
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docDir = [paths objectAtIndex:0];
+    return [docDir stringByAppendingPathComponent:filename];
 }
 
 @end
