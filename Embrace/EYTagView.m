@@ -21,6 +21,8 @@
 @property (nonatomic) NSInteger index;
 @end
 
+CGRect buttonFrame;
+
 @implementation EYCheckBoxButton
 -(void)setSelected:(BOOL)selected
 {
@@ -132,6 +134,9 @@
     [_svContainer addSubview:tf];
     _tfInput=tf;
     
+    buttonFrame.size.width = 80;
+    buttonFrame.size.height = 54;
+    
     UITapGestureRecognizer* panGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector
     (handlerTapGesture:)];
     panGestureRecognizer.numberOfTapsRequired=1;
@@ -216,7 +221,8 @@
             tagButton.hidden=YES;
             continue;
         }
-        CGRect frame=tagButton.frame;
+        tagButton.frame = buttonFrame;
+        CGRect frame = tagButton.frame;
         
         if (tagButton.frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
             NSLog(@"!!!  tagButton width tooooooooo large");
@@ -253,7 +259,7 @@
                 frame.origin.y=offsetY;
                 offsetX+=tagButton.frame.size.width+_tagPaddingSize.width;
             }
-            tagButton.frame=frame;
+            tagButton.frame = frame;
             //arrow
             if (_type==EYTagView_Type_Flow
                 && i!=_tagButtons.count-1) {
@@ -306,11 +312,12 @@
         //_tfInput.layer.borderColor=_colorInputBoard.CGColor;
         //_tfInput.layer.borderWidth=1;
         
-        CGRect frame=_tfInput.frame;
+        _tfInput.frame = buttonFrame;
+        CGRect frame = _tfInput.frame;
         //frame.size.width = [_tfInput.text sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2;
         //place holde width
-        frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2 + 15);
-        _tfInput.frame=frame;
+        //frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2 + 15);
+        _tfInput.frame = frame;
         
         if (_tfInput.frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
             NSLog(@"!!!  _tfInput width tooooooooo large");
@@ -382,7 +389,16 @@
     [tagBtn setTitleColor:_colorTag forState:UIControlStateNormal];
     [tagBtn addTarget:self action:@selector(handlerTagButtonEvent:) forControlEvents:UIControlEventTouchUpInside];
     tagBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    
     tag = [tag stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+    NSRange searchResult = [tag rangeOfString:@"\n"];
+    NSString *strtmp1 = [tag substringToIndex:searchResult.location];
+    if (strtmp1.length > 8) {
+        NSString *strtmp2 = [strtmp1 substringToIndex:7];
+        strtmp2 = [strtmp2 stringByAppendingString:@"..."];
+        strtmp2 = [strtmp2 stringByAppendingString:[tag substringFromIndex:searchResult.location]];
+        tag = strtmp2;
+    }
     [tagBtn setTitle:tag forState:UIControlStateNormal];
     [tagBtn setShowsTouchWhenHighlighted:YES];
     

@@ -38,20 +38,27 @@
     labTitle.text = strTitle;
     [self.view addSubview:labTitle];
     
-    NSString *strName = [NSString stringWithFormat: @"Name : %@", _tagRemotes.name];
-    
-    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 100, 300, 40)];
+    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 100, 60, 40)];
     [labName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
-    labName.text = strName;
+    labName.text = @"Name :";
     [self.view addSubview:labName];
     
-    NSString *strActive = [NSString stringWithFormat: @"Active : No"];
+    NSString *strName = [NSString stringWithString:_tagRemotes.name];
+    
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 109, 190, 24)];
+    [_tfName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    _tfName.text = strName;
+    _tfName.delegate = self;
+    _tfName.borderStyle =  UITextBorderStyleRoundedRect;
+    [self.view addSubview:_tfName];
+    
+    NSString *strActive = @"Active : No";
     
     UILabel *labActive = [[UILabel alloc] initWithFrame:CGRectMake(35, 125, 300, 40)];
     [labActive setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];    labActive.text = strActive;
     [self.view addSubview:labActive];
     
-    NSString *strStatus = [NSString stringWithFormat: @"Status : N/A"];
+    NSString *strStatus = @"Status : N/A";
     
     UILabel *labStatus = [[UILabel alloc] initWithFrame:CGRectMake(35, 150, 300, 40)];
     [labStatus setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
@@ -95,19 +102,45 @@
 
 - (void)BtnRenameClick:(UIButton *)sender
 {
+    if ([_tfName.text isEqualToString:_tagRemotes.name]) {
+        return;
+    }
     
+    [_tfName resignFirstResponder];
+    if (_tfName.text.length != 0) {
+        _tagRemotes.name = _tfName.text;
+        [self.delegate tagRename:_tagRemotes.index-1];
+        [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        _tfName.text = _tagRemotes.name;
+    }
 }
 
 - (void)BtnEnableClick:(UIButton *)sender
 {
-    [self.delegate tagEnable:_tagRemotes.index];
+    [self.delegate tagEnable:_tagRemotes.index-1];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)BtnRemoveClick:(UIButton *)sender
 {
-    [self.delegate tagRemove:_tagRemotes.index];
+    [self.delegate tagRemove:_tagRemotes.index-1];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if (range.location >= 16)
+        return NO;
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    if (_tfName.text.length == 0) {
+        _tfName.text = _tagRemotes.name;
+    }
+    return false;
 }
 
 /*

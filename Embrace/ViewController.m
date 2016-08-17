@@ -126,7 +126,7 @@ NSTimer     *timer;
 {
     if (central.state == CBCentralManagerStatePoweredOn)
     {
-        NSLog(@"centralManagerDidUpdateState");
+        //NSLog(@"centralManagerDidUpdateState");
         [timer fire];
     }
 }
@@ -218,7 +218,7 @@ NSTimer     *timer;
     unsigned long lonTmp;
     tagRemote *tagTmp;
     
-    NSLog(@"===%@===", string);
+    
     if (string == NULL) {
         //[self sendCmdToController:targetCmd Index:0];
         return;
@@ -231,7 +231,9 @@ NSTimer     *timer;
             tagNotify = 9;
         }
         tagNotify--;
+        return;
     }
+    NSLog(@"===%@===", string);
     
     searchResult = [string rangeOfString:@"*GFN-"];
     if (searchResult.location != NSNotFound) {
@@ -249,7 +251,6 @@ NSTimer     *timer;
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
-        //_tagRemotes[tagResp].major = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
@@ -260,14 +261,9 @@ NSTimer     *timer;
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
-        //_tagRemotes[tagResp].minor = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
-            //[self reNewButtonStatus];
             tagResp = 0;
-            //[_tagView removeAllTags];
-            //[_tagView2 removeAllTags];
-            //[self addTags];
         }
     }
     
@@ -275,7 +271,6 @@ NSTimer     *timer;
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
-        //_tagRemotes[tagResp].mfgID = lonTmp;
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
@@ -285,8 +280,6 @@ NSTimer     *timer;
     searchResult = [string rangeOfString:@"*GEN-"];
     if (searchResult.location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
-        //_tagRemotes[tagResp].enable = [tmp integerValue];
-        //_tagRemotes[tagResp].index = tagResp + 1;
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
@@ -304,8 +297,8 @@ NSTimer     *timer;
 
 - (void)sendCmdToController: (NSInteger)command Index:(NSInteger)index
 {
-    NSString *tmp1, *tmp2;
-    tagRemote *tagTmp;
+    NSString    *tmp1, *tmp2;
+    tagRemote   *tagTmp;
     
     targetCmd = command;
     tmp1 = tagCmdArray[command];
@@ -410,7 +403,7 @@ NSTimer     *timer;
         case SET_NOTIFICATION:
             break;
         case DEL_TAG:
-            tmp2 = [NSString stringWithFormat: @"%03d", index];
+            tmp2 = [NSString stringWithFormat: @"%03d", index + 1];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
@@ -444,6 +437,7 @@ NSTimer     *timer;
         } else {
             [_tagView2 addTagToLastWithIndex:tmp index:tagTmp.index];
         }
+        _tagCount++;
     }
     if (_tagCount == MAX_TAGS) {
         _tagView.tfInput.hidden = TRUE;
@@ -477,23 +471,25 @@ NSTimer     *timer;
 
 - (void)tagDisable:(NSInteger)index
 {
-    tagRemote *tagTmp = _tagArray[index-1];
+    tagRemote *tagTmp = _tagArray[index];
     
     tagTmp.enable = 0;
-    [self sendCmdToController:SET_ENABLE Index:index-1];
+    [self sendCmdToController:SET_ENABLE Index:index];
     [_tagView removeAllTags];
     [_tagView2 removeAllTags];
+    _tagCount = 0;
     [self addTags];
 }
 
 - (void)tagEnable:(NSInteger)index
 {
-    tagRemote *tagTmp = _tagArray[index-1];
+    tagRemote *tagTmp = _tagArray[index];
     
     tagTmp.enable = 1;
-    [self sendCmdToController:SET_ENABLE Index:index-1];
+    [self sendCmdToController:SET_ENABLE Index:index];
     [_tagView removeAllTags];
     [_tagView2 removeAllTags];
+    _tagCount = 0;
     [self addTags];
 }
 
@@ -516,7 +512,6 @@ NSTimer     *timer;
     tagTmp.minor = tagTarget.minor;
     tagTmp.name = [[NSString alloc] initWithString:tagTarget.name];
     tagTmp.found = 0;
-    _tagCount++;
     
     [_tagArray replaceObjectAtIndex:index withObject:tagTmp];
     
@@ -527,6 +522,7 @@ NSTimer     *timer;
     
     [_tagView removeAllTags];
     [_tagView2 removeAllTags];
+    _tagCount = 0;
     [self addTags];
 }
 
@@ -534,7 +530,7 @@ NSTimer     *timer;
 {
     NSString *tmp;
     
-    tagRemote *tagTmp = _tagArray[index-1];
+    tagRemote *tagTmp = _tagArray[index];
     
     tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04X", tagTmp.name,tagTmp.index, tagTmp.minor];
     if (tagTmp.enable == 1) {
@@ -550,14 +546,22 @@ NSTimer     *timer;
     tagTmp.minor = 0;
     tagTmp.found = 0;
     
-    [_tagArray replaceObjectAtIndex:index-1 withObject:tagTmp];
+    [_tagArray replaceObjectAtIndex:index withObject:tagTmp];
     
-    [self sendCmdToController:DEL_TAG Index:index-1];
+    [self sendCmdToController:DEL_TAG Index:index];
     _tagCount--;
     if (_tagCount < MAX_TAGS) {
         _tagView.tfInput.hidden = FALSE;
     }
     [self saveDataToFile:_tagArray];
+}
+
+- (void)tagRename:(NSInteger)index
+{
+    [_tagView removeAllTags];
+    [_tagView2 removeAllTags];
+    _tagCount = 0;
+    [self addTags];
 }
 
 - (NSInteger)checkEmptytags

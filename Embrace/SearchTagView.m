@@ -106,7 +106,7 @@ NSTimer *timerSearch;
 {
     if (central.state == CBCentralManagerStatePoweredOn)
     {
-        NSLog(@"centralManagerDidUpdateState");
+        //NSLog(@"centralManagerDidUpdateState");
         [timerSearch fire];
     }
 }
@@ -128,7 +128,7 @@ NSTimer *timerSearch;
                 tagTmp.major = strtoul([strTmp UTF8String],0,16);
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
                 tagTmp.minor = strtoul([strTmp UTF8String],0,16);
-                tagTmp.name = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
+                tagTmp.name = @"New Tag";
                 tagTmp.index = _tagArray.count + 1;
                 [_tagArray addObject:tagTmp];
             }
