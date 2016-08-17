@@ -22,6 +22,7 @@
 @property CBCentralManager *cm;
 @property ConnectionState state;
 @property UARTPeripheral *currentPeripheral;
-@property NSMutableArray *tagArray;
+@property NSMutableArray *tagArrayOrg;
+@property NSMutableArray *tagArrayNew;
 
 @end

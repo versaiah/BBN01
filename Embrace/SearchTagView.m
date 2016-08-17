@@ -79,7 +79,7 @@ NSTimer *timerSearch;
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
 
-    _tagArray = [[NSMutableArray alloc]init];
+    _tagArrayNew = [[NSMutableArray alloc]init];
 }
 
 - (void)viewWillUnload
@@ -121,7 +121,13 @@ NSTimer *timerSearch;
         NSString *strTmp = [NSString stringWithFormat:@"%02X%02X", digest[0], digest[1]];
         if (strTmp != nil) {
             unsigned long lonTmp = strtoul([strTmp UTF8String],0,16);
-            if ((lonTmp == 0x5900) && (_tagArray.count < MAX_TAGS)) {
+            if ((lonTmp == 0x5900) && (_tagArrayNew.count < MAX_TAGS)) {
+                strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
+                for (tagRemote *tmp in _tagArrayOrg) {
+                    if (tmp.minor == strtoul([strTmp UTF8String],0,16)) {
+                        return;
+                    }
+                }
                 tagTmp = [[tagRemote alloc] init];
                 tagTmp.mfgID = lonTmp;
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[20], digest[21]];
@@ -129,8 +135,8 @@ NSTimer *timerSearch;
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
                 tagTmp.minor = strtoul([strTmp UTF8String],0,16);
                 tagTmp.name = @"New Tag";
-                tagTmp.index = _tagArray.count + 1;
-                [_tagArray addObject:tagTmp];
+                tagTmp.index = _tagArrayNew.count + 1;
+                [_tagArrayNew addObject:tagTmp];
             }
         }
     }
@@ -187,8 +193,8 @@ NSTimer *timerSearch;
     NSString *tmp;
     tagRemote *tagTmp;
     
-    for (int i = 0; i < _tagArray.count; i++) {
-        tagTmp = _tagArray[i];
+    for (int i = 0; i < _tagArrayNew.count; i++) {
+        tagTmp = _tagArrayNew[i];
         tmp = [NSString stringWithFormat: @"New\n                \n%04X", tagTmp.minor];
         [_tagView addTagToLastWithIndex:tmp index:tagTmp.index];
     }
@@ -197,7 +203,7 @@ NSTimer *timerSearch;
 
 - (void)tagDidClicked:(NSInteger)index
 {
-    tagRemote *tagTmp = _tagArray[index-1];
+    tagRemote *tagTmp = _tagArrayNew[index-1];
     [self.delegate tagAddAfterSearch:tagTmp];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];}
 
