@@ -19,10 +19,12 @@ NSString *const KADDataPlist = @"tag.plist";
 @synthesize currentPeripheral = _currentPeripheral;
 
 NSArray     *tagCmdArray;
+NSArray     *connectStatusArray;
 NSInteger   tagNotify;
 NSInteger   tagResp;
 NSInteger   targetCmd;
 NSInteger   sendCmdStatus;
+UILabel     *labConnectStatus;
 NSTimer     *timer;
 
 - (void)viewDidLoad {
@@ -55,6 +57,7 @@ NSTimer     *timer;
                                             @"*SNE-X#",
                                             @"*DET-YYY#",
                                             nil];
+    connectStatusArray = [NSArray arrayWithObjects:@"IDLE", @"SCANNING", @"CONNECTING", @"CONNECTED", nil];
 
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGMain"]];
     bgView.frame = self.view.bounds;
@@ -75,6 +78,8 @@ NSTimer     *timer;
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView.viewMaxHeight = self.view.bounds.size.height - 100;
     _tagView.type = EYTagView_Type_Edit;
+    [_tagView setUserInteractionEnabled:FALSE];
+    _tagView.alpha = 0.5;
     
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
@@ -94,9 +99,18 @@ NSTimer     *timer;
     _tagView2.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView2.viewMaxHeight = self.view.bounds.size.height - 100;
     _tagView2.type = EYTagView_Type_Edit_Only_Delete;
+    [_tagView2 setUserInteractionEnabled:FALSE];
+    _tagView2.alpha = 0.5;
     
     [_tagView2 layoutTagviews];
     [self.view addSubview:_tagView2];
+    
+    labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(190, 70, 100, 20)];
+    [labConnectStatus setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12]];
+    labConnectStatus.textColor = [UIColor whiteColor];
+    labConnectStatus.text = connectStatusArray[self.state];
+    labConnectStatus.textAlignment = NSTextAlignmentRight;
+    [self.view addSubview:labConnectStatus];
     
     _tagArray = [self loadDataFromFile];
     if (_tagArray != nil) {
@@ -178,7 +192,7 @@ NSTimer     *timer;
 {
     switch (self.state) {
         case IDLE:
-            NSLog(@"Started scan ...");
+            //NSLog(@"Started scan ...");
             [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             self.state = SCANNING;
             break;
@@ -190,7 +204,7 @@ NSTimer     *timer;
         case CONNECTING:
             [self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
             [self.cm connectPeripheral:self.currentPeripheral.peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
-            NSLog(@"ReCONNECTING ...");
+            //NSLog(@"ReCONNECTING ...");
             break;
         case CONNECTED:
             [timer invalidate];
@@ -199,16 +213,30 @@ NSTimer     *timer;
         default:
             break;
     }
+    labConnectStatus.text = connectStatusArray[self.state];
+    if (self.state == CONNECTED) {
+        [_tagView setUserInteractionEnabled:TRUE];
+        _tagView.alpha = 1.0;
+        [_tagView2 setUserInteractionEnabled:TRUE];
+        _tagView2.alpha = 1.0;
+    } else {
+        [_tagView setUserInteractionEnabled:FALSE];
+        _tagView.alpha = 0.5;
+        [_tagView2 setUserInteractionEnabled:FALSE];
+        _tagView2.alpha = 0.5;
+    }
 }
 
 - (void)didReadyToGo
 {
+    /*
     [self sendCmdToController:GET_TAG_COUNT Index:0];
     [self sendCmdToController:GET_ENABLE Index:0];
     [self sendCmdToController:GET_MAJOR Index:0];
     [self sendCmdToController:GET_MINOR Index:0];
     [self sendCmdToController:GET_MFG_DATA Index:0];
     [self sendCmdToController:GET_FOUND Index:0];
+     */
 }
 
 - (void)didReceiveData:(NSString *)string
