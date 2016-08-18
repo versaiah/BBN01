@@ -10,14 +10,10 @@
 #import "EYTagView.h"
 #import "UARTPeripheral.h"
 #import "tagRemote.h"
+#import "AddTagView.h"
 
-@protocol SearchTagViewDelegate
-- (void)tagAddAfterSearch:(tagRemote *)tagTarget;
-@end
+@interface SearchTagView : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate, EYTagViewDelegate>
 
-@interface SearchTagView : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate>
-
-@property (nonatomic, strong) id <SearchTagViewDelegate> delegate;
 @property (strong, nonatomic) IBOutlet EYTagView *tagView;
 @property CBCentralManager *cm;
 @property ConnectionState state;

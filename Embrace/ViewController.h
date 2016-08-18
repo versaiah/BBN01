@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "EYTagView.h"
 #import "UARTPeripheral.h"
+#import "tagRemote.h"
 #import "ActiveInfoView.h"
 #import "InActiveInfoView.h"
 #import "MissingInfoView.h"
 #import "SearchTagView.h"
-#import "tagRemote.h"
+#import "AddTagView.h"
 
-@interface ViewController : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate, ActiveInfoViewDelegate, MissingInfoViewDelegate, InactiveInfoViewDelegate, SearchTagViewDelegate>
+@interface ViewController : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate, ActiveInfoViewDelegate, MissingInfoViewDelegate, InactiveInfoViewDelegate>;
 
 @property (strong, nonatomic) IBOutlet EYTagView *tagView;
 @property (strong, nonatomic) IBOutlet EYTagView *tagView2;
@@ -24,6 +25,8 @@
 @property UARTPeripheral *currentPeripheral;
 @property NSMutableArray *tagArray;
 @property NSInteger tagCount;
+
+- (void)tagAddAfterSearch:(tagRemote *)tagTarget;
 
 @end
 

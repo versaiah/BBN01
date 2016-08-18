@@ -45,6 +45,26 @@
             </objects>
             <point key="canvasLocation" x="471" y="212"/>
         </scene>
+        <!--Add Tag View-->
+        <scene sceneID="Vqi-zz-djM">
+            <objects>
+                <viewController storyboardIdentifier="AddTagView" id="rke-5e-ZaB" customClass="AddTagView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3Tq-ds-Odn"/>
+                        <viewControllerLayoutGuide type="bottom" id="sqb-SN-VMC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QwJ-O9-1LN">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EYX-HB-4m4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="687" y="212"/>
+        </scene>
         <!--Active Info View-->
         <scene sceneID="Wet-xA-6MD">
             <objects>

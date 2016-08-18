@@ -525,7 +525,6 @@ NSTimer     *timer;
 {
     SearchTagView *searchTagView = [self.storyboard instantiateViewControllerWithIdentifier:@"SearchTagView"];
     searchTagView.tagArrayOrg = _tagArray;
-    searchTagView.delegate = self;
     [self presentViewController:searchTagView animated:YES completion:nil];
 }
 

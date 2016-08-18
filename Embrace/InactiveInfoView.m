@@ -45,7 +45,7 @@
     
     NSString *strName = [NSString stringWithString:_tagRemotes.name];
     
-    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 109, 190, 24)];
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 109, 120, 24)];
     [_tfName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
     _tfName.text = strName;
     _tfName.delegate = self;

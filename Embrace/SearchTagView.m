@@ -134,7 +134,7 @@ NSTimer *timerSearch;
                 tagTmp.major = strtoul([strTmp UTF8String],0,16);
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
                 tagTmp.minor = strtoul([strTmp UTF8String],0,16);
-                tagTmp.name = @"New Tag";
+                tagTmp.name = @"New";
                 tagTmp.index = _tagArrayNew.count + 1;
                 [_tagArrayNew addObject:tagTmp];
             }
@@ -204,8 +204,11 @@ NSTimer *timerSearch;
 - (void)tagDidClicked:(NSInteger)index
 {
     tagRemote *tagTmp = _tagArrayNew[index-1];
-    [self.delegate tagAddAfterSearch:tagTmp];
-    [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];}
+    
+    AddTagView *addTagView = [self.storyboard instantiateViewControllerWithIdentifier:@"AddTagView"];
+    addTagView.tagRemotes = tagTmp;
+    [self presentViewController:addTagView animated:YES completion:nil];
+}
 
 /*
 #pragma mark - Navigation
