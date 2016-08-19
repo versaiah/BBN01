@@ -30,7 +30,7 @@
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
     
-    NSString *strTitle = [NSString stringWithFormat: @"TAG %03d  -  %@", _tagRemotes.index, [_tagRemotes.name uppercaseString]];
+    NSString *strTitle = [NSString stringWithFormat: @"TAG %03lu  -  %@", (unsigned long)_tagRemotes.index, [_tagRemotes.name uppercaseString]];
     
     UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, 300, 40)];
     [labTitle setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];

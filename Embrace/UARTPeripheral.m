@@ -83,7 +83,7 @@
     }
     else
     {
-        NSLog(@"No write property on TX characteristic, %d.", self.txCharacteristic.properties);
+        NSLog(@"No write property on TX characteristic, %lu.", (unsigned long)self.txCharacteristic.properties);
     }
 }
 

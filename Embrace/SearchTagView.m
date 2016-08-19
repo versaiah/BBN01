@@ -195,7 +195,7 @@ NSTimer *timerSearch;
     
     for (int i = 0; i < _tagArrayNew.count; i++) {
         tagTmp = _tagArrayNew[i];
-        tmp = [NSString stringWithFormat: @"New\n                \n%04X", tagTmp.minor];
+        tmp = [NSString stringWithFormat: @"New\n                \n%04lX", (unsigned long)tagTmp.minor];
         [_tagView addTagToLastWithIndex:tmp index:tagTmp.index];
     }
      _tagView.hidden = FALSE;

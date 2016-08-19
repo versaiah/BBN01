@@ -10,13 +10,13 @@
 
 @interface tagRemote : NSObject <NSCoding>
 @property (nonatomic, copy) NSString        *name;
-@property (nonatomic, assign) NSInteger    serial;
-@property (nonatomic, assign) NSInteger    mfgID;
-@property (nonatomic, assign) NSInteger    lastSeen;
-@property (nonatomic, assign) NSInteger    major;
-@property (nonatomic, assign) NSInteger    minor;
-@property (nonatomic, assign) NSInteger    enable;
-@property (nonatomic, assign) NSInteger    found;
-@property (nonatomic, assign) NSInteger    index;
+@property (nonatomic, assign) NSUInteger    serial;
+@property (nonatomic, assign) NSUInteger    mfgID;
+@property (nonatomic, assign) NSUInteger    lastSeen;
+@property (nonatomic, assign) NSUInteger    major;
+@property (nonatomic, assign) NSUInteger    minor;
+@property (nonatomic, assign) NSUInteger    enable;
+@property (nonatomic, assign) NSUInteger    found;
+@property (nonatomic, assign) NSUInteger    index;
 @end
 

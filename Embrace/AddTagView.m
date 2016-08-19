@@ -45,7 +45,7 @@
     btnTag.backgroundColor = COLORRGB(0x0432FF);
     btnTag.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     btnTag.layer.cornerRadius = 3;
-    NSString *tmp = [NSString stringWithFormat: @"New\n                \n%04X", _tagRemotes.minor];
+    NSString *tmp = [NSString stringWithFormat: @"New\n                \n%04lX", (unsigned long)_tagRemotes.minor];
     [btnTag setTitle:tmp forState:UIControlStateNormal];
     btnTag.enabled = FALSE;
     [self.view addSubview:btnTag];
