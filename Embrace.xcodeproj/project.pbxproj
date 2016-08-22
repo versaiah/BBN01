@@ -57,6 +57,7 @@
 		F032B2151D599F4100933617 /* MissingInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MissingInfoView.m; sourceTree = "<group>"; };
 		F0632AED1D65BE04007E5ED2 /* SetupSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupSettingsView.h; sourceTree = "<group>"; };
 		F0632AEE1D65BE04007E5ED2 /* SetupSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupSettingsView.m; sourceTree = "<group>"; };
+		F07A5B421D6ACBD900578912 /* Embrace.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Embrace.pch; sourceTree = SOURCE_ROOT; };
 		F08237B11D61D59D00B28884 /* tagRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tagRemote.h; sourceTree = "<group>"; };
 		F08237B21D61D59D00B28884 /* tagRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tagRemote.m; sourceTree = "<group>"; };
 		F08237B41D64434300B28884 /* NoMenuTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMenuTextField.h; sourceTree = "<group>"; };
@@ -165,7 +166,6 @@
 				F0DD01571D49F5B0005D95DF /* Main.storyboard */,
 				F0DD015D1D49F5B0005D95DF /* Assets.xcassets */,
 				F0DD015F1D49F5B0005D95DF /* LaunchScreen.storyboard */,
-				F0DD01621D49F5B0005D95DF /* Info.plist */,
 				F0DD015A1D49F5B0005D95DF /* Embrace.xcdatamodeld */,
 				F0DD014E1D49F5B0005D95DF /* Supporting Files */,
 			);
@@ -175,6 +175,8 @@
 		F0DD014E1D49F5B0005D95DF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F07A5B421D6ACBD900578912 /* Embrace.pch */,
+				F0DD01621D49F5B0005D95DF /* Info.plist */,
 				F0DD014F1D49F5B0005D95DF /* main.m */,
 			);
 			name = "Supporting Files";
@@ -484,6 +486,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Embrace.pch;
 				INFOPLIST_FILE = Embrace/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -500,6 +504,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Embrace.pch;
 				INFOPLIST_FILE = Embrace/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
