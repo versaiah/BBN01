@@ -85,6 +85,26 @@
             </objects>
             <point key="canvasLocation" x="471" y="463"/>
         </scene>
+        <!--Setup Settings View-->
+        <scene sceneID="aUu-l0-2pI">
+            <objects>
+                <viewController storyboardIdentifier="SetupSettingsView" id="MXf-9N-SdC" customClass="SetupSettingsView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hLZ-4A-epE"/>
+                        <viewControllerLayoutGuide type="bottom" id="Gut-hP-GTX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eW9-V2-gCy">
+                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="200" height="200"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IpA-Kw-eBB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="687" y="463"/>
+        </scene>
         <!--Missing Info View-->
         <scene sceneID="k1a-xF-sqC">
             <objects>

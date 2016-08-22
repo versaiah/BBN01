@@ -23,7 +23,9 @@ NSTimer *timerSearch;
     timerSearch = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
     
     CGSize screenSize = [[UIScreen mainScreen] applicationFrame].size;
-    CGFloat sg = screenSize.height / 2208;
+    CGFloat sgh = screenSize.height / 2208;
+    CGFloat sgw = screenSize.width / 1242;
+    _viewFont = [UIFont boldSystemFontOfSize:16];
     
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGSearch"]];
     bgView.frame = self.view.bounds;
@@ -31,7 +33,7 @@ NSTimer *timerSearch;
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180 * sg, 180 * sg);
+    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
@@ -39,7 +41,7 @@ NSTimer *timerSearch;
     NSString *strSearch = @"Looking for tags...";
     
     UILabel *labSearch = [[UILabel alloc] initWithFrame:CGRectMake(85, 95, 200, 30)];
-    [labSearch setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labSearch setFont: _viewFont];
     labSearch.text = strSearch;
     [self.view addSubview:labSearch];
     /*
@@ -53,14 +55,11 @@ NSTimer *timerSearch;
     NSString *strSelect = @"Select a Tag to Add";
     
     UILabel *labSelect = [[UILabel alloc] initWithFrame:CGRectMake(90, 200, 200, 30)];
-    [labSelect setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labSelect setFont: _viewFont];
     labSelect.text = strSelect;
     [self.view addSubview:labSelect];
     
-    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
-                                                          self.view.bounds.origin.y + 98,
-                                                          self.view.bounds.size.width - 55,
-                                                          self.view.bounds.size.height - 100)];
+    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 460*sgh, 1071*sgw, 604*sgh)];
     _tagView.delegate = self;
     _tagView.colorTag = COLORRGB(0xffffff);
     _tagView.colorTagBg = COLORRGB(0x0432FF);
@@ -71,7 +70,7 @@ NSTimer *timerSearch;
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView.backgroundColor = COLORRGB(0xffffff);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
-    _tagView.viewMaxHeight = self.view.bounds.size.height - 100;
+    _tagView.viewMaxHeight = 604*sgh;
     _tagView.type = EYTagView_Type_Edit;
     _tagView.tfInput.hidden = TRUE;
     _tagView.hidden = TRUE;
@@ -97,7 +96,7 @@ NSTimer *timerSearch;
     //NSLog(@"heightDidChangedTagView");
 }
 
-- (void)BTNBackClick:(UIButton *)sender
+- (IBAction)BTNBackClick:(UIButton *)sender
 {
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }

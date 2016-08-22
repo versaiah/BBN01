@@ -20,3 +20,9 @@
 @property (nonatomic, assign) NSUInteger    index;
 @end
 
+@interface tagController : NSObject
+@property (nonatomic, assign) NSUInteger    timeout;
+@property (nonatomic, assign) NSUInteger    interval;
+@property (nonatomic, assign) NSUInteger    NotifyEnable;
+@end
+

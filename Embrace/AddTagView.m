@@ -17,7 +17,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGSize screenSize = [[UIScreen mainScreen] applicationFrame].size;
-    CGFloat sg = screenSize.height / 2208;
+    CGFloat sgh = screenSize.height / 2208;
+    CGFloat sgw = screenSize.width / 1242;
+    _viewFont = [UIFont boldSystemFontOfSize:16];
     
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGAddTag"]];
     bgView.frame = self.view.bounds;
@@ -25,16 +27,17 @@
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180 * sg, 180 * sg);
+    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
     
     UIButton *btnAdd = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnAdd addTarget:self action:@selector(BTNAddClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnAdd.frame = CGRectMake(210, 190, 400 * sg, 150 * sg);
+    btnAdd.frame = CGRectMake(783*sgw, 920*sgh, 335*sgw, 144*sgh);
     btnAdd.backgroundColor = COLORRGB(0x000000);
     btnAdd.layer.cornerRadius = 3;
+    [btnAdd.titleLabel setFont:_viewFont];
     [btnAdd setTitle:@"ADD" forState:UIControlStateNormal];
     [btnAdd setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnAdd];
@@ -51,12 +54,12 @@
     [self.view addSubview:btnTag];
     
     UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 150, 60, 40)];
-    [labName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labName setFont: _viewFont];
     labName.text = @"Name :";
     [self.view addSubview:labName];
     
     _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 159, 120, 24)];
-    [_tfName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [_tfName setFont: _viewFont];
     _tfName.text = @"New";
     _tfName.delegate = self;
     _tfName.borderStyle =  UITextBorderStyleRoundedRect;
@@ -68,12 +71,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)BTNBackClick:(UIButton *)sender
+- (IBAction)BTNBackClick:(UIButton *)sender
 {
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)BTNAddClick:(UIButton *)sender
+- (IBAction)BTNAddClick:(UIButton *)sender
 {
     [_tfName resignFirstResponder];
     if (_tfName.text.length != 0) {
@@ -95,8 +98,8 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
-    if (_tfName.text.length == 0) {
-        _tfName.text = _tagRemotes.name;
+    if (textField.text.length == 0) {
+        textField.text = _tagRemotes.name;
     }
     return false;
 }

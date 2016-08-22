@@ -11,6 +11,7 @@
 		F032B2101D599F0600933617 /* ActiveInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = F032B20F1D599F0600933617 /* ActiveInfoView.m */; };
 		F032B2131D599F3000933617 /* InactiveInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = F032B2121D599F3000933617 /* InactiveInfoView.m */; };
 		F032B2161D599F4100933617 /* MissingInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = F032B2151D599F4100933617 /* MissingInfoView.m */; };
+		F0632AEF1D65BE04007E5ED2 /* SetupSettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0632AEE1D65BE04007E5ED2 /* SetupSettingsView.m */; };
 		F08237B31D61D59D00B28884 /* tagRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = F08237B21D61D59D00B28884 /* tagRemote.m */; };
 		F08237B61D64434300B28884 /* NoMenuTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F08237B51D64434300B28884 /* NoMenuTextField.m */; };
 		F0AB9DBB1D50530D007C22F0 /* UARTPeripheral.m in Sources */ = {isa = PBXBuildFile; fileRef = F0AB9DBA1D50530D007C22F0 /* UARTPeripheral.m */; };
@@ -54,6 +55,8 @@
 		F032B2121D599F3000933617 /* InactiveInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InactiveInfoView.m; sourceTree = "<group>"; };
 		F032B2141D599F4100933617 /* MissingInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MissingInfoView.h; sourceTree = "<group>"; };
 		F032B2151D599F4100933617 /* MissingInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MissingInfoView.m; sourceTree = "<group>"; };
+		F0632AED1D65BE04007E5ED2 /* SetupSettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupSettingsView.h; sourceTree = "<group>"; };
+		F0632AEE1D65BE04007E5ED2 /* SetupSettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupSettingsView.m; sourceTree = "<group>"; };
 		F08237B11D61D59D00B28884 /* tagRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tagRemote.h; sourceTree = "<group>"; };
 		F08237B21D61D59D00B28884 /* tagRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tagRemote.m; sourceTree = "<group>"; };
 		F08237B41D64434300B28884 /* NoMenuTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoMenuTextField.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				F08237B21D61D59D00B28884 /* tagRemote.m */,
 				F0DD01541D49F5B0005D95DF /* ViewController.h */,
 				F0DD01551D49F5B0005D95DF /* ViewController.m */,
+				F0632AED1D65BE04007E5ED2 /* SetupSettingsView.h */,
+				F0632AEE1D65BE04007E5ED2 /* SetupSettingsView.m */,
 				F0CA74121D647B94009FEA76 /* AddTagView.h */,
 				F0CA74131D647B94009FEA76 /* AddTagView.m */,
 				F00651281D5C29F800514D97 /* SearchTagView.h */,
@@ -323,6 +328,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0632AEF1D65BE04007E5ED2 /* SetupSettingsView.m in Sources */,
 				F0DD01561D49F5B0005D95DF /* ViewController.m in Sources */,
 				F006512A1D5C29F800514D97 /* SearchTagView.m in Sources */,
 				F08237B31D61D59D00B28884 /* tagRemote.m in Sources */,

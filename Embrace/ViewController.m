@@ -24,15 +24,19 @@ NSInteger   tagNotify;
 NSInteger   tagResp;
 NSInteger   targetCmd;
 NSInteger   sendCmdStatus;
+NSInteger   timerCheck;
 UILabel     *labConnectStatus;
 NSTimer     *timer;
+UIButton    *btnSetup;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    CGSize screenSize = [[UIScreen mainScreen] applicationFrame].size;
+    CGFloat sgh = screenSize.height / 2208;
+    CGFloat sgw = screenSize.width / 1242;
     
     self.cm = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
-    
     tagCmdArray = [NSArray arrayWithObjects:@"*GTC#",
                                             @"*GSN-YYY#",
                                             @"*GMA-YYY#",
@@ -41,21 +45,25 @@ NSTimer     *timer;
                                             @"*GEN-YYY#",
                                             @"*GFN-YYY#",
                                             @"*GLS-YYY#",
+                                            @"*GSI#",
+                                            @"*GST#",
                                             @"*GBL#",
                                             @"*GSY#",
+                                            @"*GNE#",
                                             @"*SSN-YYY-XXXXXX#",
                                             @"*SMA-YYY-XXXX#",
                                             @"*SMI-YYY-XXXX#",
                                             @"*SMF-YYY-XXXX#",
                                             @"*SEN-YYY-X#",
                                             @"*SEA-X#",
-                                            @"*SSI-XX#",
+                                            @"*SSI-XXX#",
                                             @"*SST-XXX#",
                                             @"*SSS#",
                                             @"*STS#",
                                             @"*SSY-XXX#",
                                             @"*SNE-X#",
                                             @"*DET-YYY#",
+                                            @"*DEA#",
                                             nil];
     connectStatusArray = [NSArray arrayWithObjects:@"IDLE", @"SCANNING", @"CONNECTING", @"CONNECTED", nil];
 
@@ -63,10 +71,15 @@ NSTimer     *timer;
     bgView.frame = self.view.bounds;
     [self.view addSubview:bgView];
     
-    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
-                                                          self.view.bounds.origin.y + 98,
-                                                          self.view.bounds.size.width - 55,
-                                                          self.view.bounds.size.height - 100)];
+    btnSetup = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnSetup addTarget:self action:@selector(BTNSetupClick:) forControlEvents:UIControlEventTouchUpInside];
+    btnSetup.frame = CGRectMake(9, 4, 150*sgw, 150*sgh);
+    [btnSetup setBackgroundImage:[UIImage imageNamed:@"ImageBTNSetup"] forState:UIControlStateNormal];
+    [btnSetup setShowsTouchWhenHighlighted:YES];
+    btnSetup.userInteractionEnabled = FALSE;
+    [self.view addSubview:btnSetup];
+    
+    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 460*sgh, 1071*sgw, 604*sgh)];
     _tagView.delegate = self;
     _tagView.colorTag = COLORRGB(0xffffff);
     _tagView.colorTagBg = COLORRGB(0x007000);
@@ -76,7 +89,7 @@ NSTimer     *timer;
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView.backgroundColor = COLORRGB(0xffffff);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
-    _tagView.viewMaxHeight = self.view.bounds.size.height - 100;
+    _tagView.viewMaxHeight = 604*sgh;
     _tagView.type = EYTagView_Type_Edit;
     [_tagView setUserInteractionEnabled:FALSE];
     _tagView.alpha = 0.5;
@@ -84,10 +97,7 @@ NSTimer     *timer;
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
     
-    _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x + 33,
-                                                           self.view.bounds.origin.y + 260,
-                                                           self.view.bounds.size.width - 55,
-                                                           self.view.bounds.size.height - 100)];
+    _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 1226*sgh, 1071*sgw, 604*sgh)];
     _tagView2.delegate = self;
     _tagView2.colorTag = COLORRGB(0xffffff);
     _tagView2.colorTagBg = COLORRGB(0x848484);
@@ -97,7 +107,7 @@ NSTimer     *timer;
     _tagView2.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView2.backgroundColor = COLORRGB(0xffffff);
     _tagView2.colorInputBoard = COLORRGB(0x2ab44e);
-    _tagView2.viewMaxHeight = self.view.bounds.size.height - 100;
+    _tagView2.viewMaxHeight = 604*sgh;
     _tagView2.type = EYTagView_Type_Edit_Only_Delete;
     [_tagView2 setUserInteractionEnabled:FALSE];
     _tagView2.alpha = 0.5;
@@ -106,7 +116,7 @@ NSTimer     *timer;
     [self.view addSubview:_tagView2];
     
     labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(190, 70, 100, 20)];
-    [labConnectStatus setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12]];
+    [labConnectStatus setFont:[UIFont boldSystemFontOfSize:12]];
     labConnectStatus.textColor = [UIColor whiteColor];
     labConnectStatus.text = connectStatusArray[self.state];
     labConnectStatus.textAlignment = NSTextAlignmentRight;
@@ -116,6 +126,7 @@ NSTimer     *timer;
     if (_tagArray != nil) {
         [self addTags];
     }
+    _tagControll = [[tagController alloc] init];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -147,7 +158,7 @@ NSTimer     *timer;
 
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    NSLog(@"Did discover peripheral %@", peripheral.name);
+    NSLog(@"Find peripheral %@", peripheral.name);
     [self.cm stopScan];
     self.state = CONNECTING;
     
@@ -166,17 +177,18 @@ NSTimer     *timer;
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
-    NSLog(@"Did connect peripheral %@", peripheral.name);
+    NSLog(@"Connect to peripheral %@", peripheral.name);
     if ([self.currentPeripheral.peripheral isEqual:peripheral])
     {
         [self.currentPeripheral didConnect];
+        sleep(1);
         self.state = CONNECTED;
     }
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    NSLog(@"Did disconnect peripheral %@", peripheral.name);
+    NSLog(@"Disconnect with peripheral %@", peripheral.name);
     if ([self.currentPeripheral.peripheral isEqual:peripheral])
     {
         [self.currentPeripheral didDisconnect];
@@ -184,7 +196,14 @@ NSTimer     *timer;
         if (timer.isValid == NO) {
             timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
             [timer fire];
+        } else {
+            timer.fireDate = [NSDate dateWithTimeInterval:3 sinceDate:[NSDate date]];
         }
+        [_tagView setUserInteractionEnabled:FALSE];
+        _tagView.alpha = 0.5;
+        [_tagView2 setUserInteractionEnabled:FALSE];
+        _tagView2.alpha = 0.5;
+        btnSetup.userInteractionEnabled = FALSE;
     }
 }
 
@@ -207,28 +226,31 @@ NSTimer     *timer;
             //NSLog(@"ReCONNECTING ...");
             break;
         case CONNECTED:
-            [timer invalidate];
-            timer = nil;
+            [self sendCmdToController:GET_FOUND Index:0];
+            if (timerCheck == 4) {
+                //[self tagCheck];
+                timerCheck = 0;
+            } else {
+                timerCheck++;
+            }
             break;
         default:
             break;
     }
     labConnectStatus.text = connectStatusArray[self.state];
+}
+
+- (void)tagCheck
+{
     if (self.state == CONNECTED) {
-        [_tagView setUserInteractionEnabled:TRUE];
-        _tagView.alpha = 1.0;
-        [_tagView2 setUserInteractionEnabled:TRUE];
-        _tagView2.alpha = 1.0;
-    } else {
-        [_tagView setUserInteractionEnabled:FALSE];
-        _tagView.alpha = 0.5;
-        [_tagView2 setUserInteractionEnabled:FALSE];
-        _tagView2.alpha = 0.5;
+        [self sendCmdToController:GET_TAG_COUNT Index:0];
     }
 }
 
 - (void)didReadyToGo
 {
+    [timer invalidate];
+    //timer.fireDate = [NSDate dateWithTimeInterval:15 sinceDate:[NSDate date]];
     /*
     [self sendCmdToController:GET_TAG_COUNT Index:0];
     [self sendCmdToController:GET_ENABLE Index:0];
@@ -236,7 +258,19 @@ NSTimer     *timer;
     [self sendCmdToController:GET_MINOR Index:0];
     [self sendCmdToController:GET_MFG_DATA Index:0];
     [self sendCmdToController:GET_FOUND Index:0];
-     */
+    */
+    [self sendCmdToController:GET_SCAN_INTERVAL Index:0];
+    [self sendCmdToController:GET_SCAN_TIMEOUT Index:0];
+    [self sendCmdToController:GET_NOTIFICATION Index:0];
+    //[self sendCmdToController:GET_FOUND Index:0];
+    
+    [_tagView setUserInteractionEnabled:TRUE];
+    _tagView.alpha = 1.0;
+    [_tagView2 setUserInteractionEnabled:TRUE];
+    _tagView2.alpha = 1.0;
+    btnSetup.userInteractionEnabled = TRUE;
+    timer = [NSTimer scheduledTimerWithTimeInterval:15 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+    [timer fire];
 }
 
 - (void)didReceiveData:(NSString *)string
@@ -257,14 +291,14 @@ NSTimer     *timer;
         if (tagNotify == 0) {
             [self sendCmdToController:GET_FOUND Index:0];
             tagNotify = 9;
+            NSLog(@"===%@===", string);
         }
         tagNotify--;
         return;
     }
     NSLog(@"===%@===", string);
     
-    searchResult = [string rangeOfString:@"*GFN-"];
-    if (searchResult.location != NSNotFound) {
+    if ([string rangeOfString:@"*GFN-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
         tagTmp = _tagArray[tagResp];
         tagTmp.found = [tmp integerValue];
@@ -273,49 +307,49 @@ NSTimer     *timer;
             [self reNewButtonStatus];
             tagResp = 0;
         }
-    }
-    
-    searchResult = [string rangeOfString:@"*GMA-"];
-    if (searchResult.location != NSNotFound) {
+    } else if ([string rangeOfString:@"*GMA-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
         }
-    }
-    
-    searchResult = [string rangeOfString:@"*GMI-"];
-    if (searchResult.location != NSNotFound) {
+    } else if ([string rangeOfString:@"*GMI-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
         }
-    }
-    
-    searchResult = [string rangeOfString:@"*GMF-"];
-    if (searchResult.location != NSNotFound) {
+    } else if ([string rangeOfString:@"*GMF-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 4)];
         lonTmp = strtoul([tmp UTF8String],0,16);
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
         }
-    }
-    
-    searchResult = [string rangeOfString:@"*GEN-"];
-    if (searchResult.location != NSNotFound) {
+    } else if ([string rangeOfString:@"*GTC-"].location != NSNotFound) {
+        tmp = [string substringWithRange:NSMakeRange(5, 3)];
+        NSInteger num = [tmp integerValue];
+        if (_tagCount != num) {
+            //[self setAllTagToController];
+        }
+    } else if ([string rangeOfString:@"*GEN-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
         tagResp++;
         if (tagResp == MAX_TAGS) {
             tagResp = 0;
         }
-    }
-    
-    searchResult = [string rangeOfString:@"*STS-"];
-    if (searchResult.location != NSNotFound) {
+    } else if ([string rangeOfString:@"*GSI-"].location != NSNotFound) {
+        tmp = [string substringWithRange:NSMakeRange(5, 3)];
+        _tagControll.interval = [tmp integerValue];
+    } else if ([string rangeOfString:@"*GST-"].location != NSNotFound) {
+        tmp = [string substringWithRange:NSMakeRange(5, 3)];
+        _tagControll.timeout = [tmp integerValue];
+    } else if ([string rangeOfString:@"*GNE-"].location != NSNotFound) {
+        tmp = [string substringWithRange:NSMakeRange(5, 1)];
+        _tagControll.NotifyEnable = [tmp integerValue];
+    } else if ([string rangeOfString:@"*STS-"].location != NSNotFound) {
         searchResult = [string rangeOfString:@"OK"];
         if (searchResult.location == NSNotFound) {
             //[self sendCmdToController:targetCmd Index:0];
@@ -323,7 +357,19 @@ NSTimer     *timer;
     }
 }
 
-- (void)sendCmdToController: (NSInteger)command Index:(NSInteger)index
+- (void)setAllTagToController
+{
+    for (tagRemote *tmp in _tagArray) {
+        if (tmp.index != 0) {
+            [self sendCmdToController:SET_MFG_ID Index:tmp.index];
+            [self sendCmdToController:SET_MAJOR Index:tmp.index];
+            [self sendCmdToController:SET_MINOR Index:tmp.index];
+            [self sendCmdToController:SET_ENABLE Index:tmp.index];
+        }
+    }
+}
+
+- (void)sendCmdToController: (NSInteger)command Index:(NSUInteger)index
 {
     NSString    *tmp1, *tmp2;
     tagRemote   *tagTmp;
@@ -380,69 +426,72 @@ NSTimer     *timer;
             break;
         case SET_MAJOR:
             tagTmp =  _tagArray[index];
-            tmp2 = [NSString stringWithFormat: @"%03d", tagTmp.index];
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)tagTmp.index];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
-            tmp2 = [NSString stringWithFormat: @"%04X", tagTmp.major];
+            tmp2 = [NSString stringWithFormat: @"%04lX", (unsigned long)tagTmp.major];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_MINOR:
             tagTmp =  _tagArray[index];
-            tmp2 = [NSString stringWithFormat: @"%03d", tagTmp.index];
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)tagTmp.index];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
-            tmp2 = [NSString stringWithFormat: @"%04X", tagTmp.minor];
+            tmp2 = [NSString stringWithFormat: @"%04lX", (unsigned long)tagTmp.minor];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_MFG_ID:
             tagTmp =  _tagArray[index];
-            tmp2 = [NSString stringWithFormat: @"%03d", tagTmp.index];
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)tagTmp.index];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
-            tmp2 = [NSString stringWithFormat: @"%04X", tagTmp.mfgID];
+            tmp2 = [NSString stringWithFormat: @"%04lX", (unsigned long)tagTmp.mfgID];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXXX" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_ENABLE:
             tagTmp =  _tagArray[index];
-            tmp2 = [NSString stringWithFormat: @"%03d", tagTmp.index];
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)tagTmp.index];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
-            tmp2 = [NSString stringWithFormat: @"%1d", tagTmp.enable];
+            tmp2 = [NSString stringWithFormat: @"%1ld", (unsigned long)tagTmp.enable];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"X" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_ENABLE_ALL:
-            tmp2 = [NSString stringWithFormat: @"%1d", index];
+        case SET_NOTIFICATION:
+            tmp2 = [NSString stringWithFormat: @"%1ld", (unsigned long)index];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"X" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_SCAN_INTERVAL:
-            break;
         case SET_SCAN_TIMEOUT:
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)index];
+            tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"XXX" withString:tmp2];
+            [self.currentPeripheral writeString:tmp1];
             break;
         case GET_TAG_COUNT:
+        case GET_SCAN_INTERVAL:
+        case GET_SCAN_TIMEOUT:
+        case GET_NOTIFICATION:
         case GET_BATTERY:
         case GET_SENSITIVITY:
         case SET_SCAN_START:
         case SET_SCAN_STOP:
+        case DEL_ALL_TAG:
             [self.currentPeripheral writeString:tmp1];
             break;
         case SET_SENSITIVITY:
             break;
-        case SET_NOTIFICATION:
-            break;
         case DEL_TAG:
-            tmp2 = [NSString stringWithFormat: @"%03d", index + 1];
+            tmp2 = [NSString stringWithFormat: @"%03ld", (unsigned long)index + 1];
             tmp1 = [tmp1 stringByReplacingOccurrencesOfString:@"YYY" withString:tmp2];
             [self.currentPeripheral writeString:tmp1];
             break;
-        case DEL_ALL_TAG:
-            break;
-            
         default:
             break;
     }
     NSLog(@"%@", tmp1);
-    usleep(10000);
+    usleep(100000);
+    
 }
 
 - (void)reNewButtonStatus
@@ -459,7 +508,7 @@ NSTimer     *timer;
         tagTmp = _tagArray[i];
         if (tagTmp.index == 0) continue;
 
-        tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04X", tagTmp.name, tagTmp.index, tagTmp.minor];
+        tmp = [NSString stringWithFormat: @"%@\n            %03lu\n%04lX", tagTmp.name, (unsigned long)tagTmp.index, (unsigned long)tagTmp.minor];
         if (tagTmp.enable == 1) {
             [_tagView addTagToLastWithIndex:tmp index:tagTmp.index];
         } else {
@@ -530,6 +579,9 @@ NSTimer     *timer;
 
 - (void)tagAddAfterSearch:(tagRemote *)tagTarget
 {
+    if (self.state != CONNECTED) {
+        return;
+    }
     NSInteger index = [self checkEmptytags];
     
     tagRemote *tagTmp = [[tagRemote alloc] init];
@@ -560,7 +612,7 @@ NSTimer     *timer;
     
     tagRemote *tagTmp = _tagArray[index];
     
-    tmp = [NSString stringWithFormat: @"%@\n            %03d\n%04X", tagTmp.name,tagTmp.index, tagTmp.minor];
+    tmp = [NSString stringWithFormat: @"%@\n            %03lu\n%04lX", tagTmp.name,(unsigned long)tagTmp.index, (unsigned long)tagTmp.minor];
     if (tagTmp.enable == 1) {
         [_tagView removeTag:tmp];
     } else {
@@ -605,6 +657,28 @@ NSTimer     *timer;
     }
     
     return -1;
+}
+
+- (IBAction)BTNSetupClick:(UIButton *)sender
+{
+    SetupSettingsView *setupSettingsView = [self.storyboard instantiateViewControllerWithIdentifier:@"SetupSettingsView"];
+    setupSettingsView.delegate = self;
+    setupSettingsView.tagControll = [[tagController alloc] init];
+    setupSettingsView.tagControll.interval = _tagControll.interval;
+    setupSettingsView.tagControll.timeout = _tagControll.timeout;
+    setupSettingsView.tagControll.NotifyEnable = _tagControll.NotifyEnable;
+    [self presentViewController:setupSettingsView animated:YES completion:nil];
+}
+
+- (void)setController:(NSInteger)interval timeout:(NSInteger)timeout notify:(NSInteger)notify
+{
+    _tagControll.interval = interval;
+    _tagControll.timeout = timeout;
+    _tagControll.NotifyEnable = notify;
+    
+    [self sendCmdToController:SET_SCAN_INTERVAL Index:interval];
+    [self sendCmdToController:SET_SCAN_TIMEOUT Index:timeout];
+    [self sendCmdToController:SET_NOTIFICATION Index:notify];
 }
 
 - (void)saveDataToFile:(NSArray *)tagArray

@@ -21,5 +21,6 @@
 @property (nonatomic, strong) id <ActiveInfoViewDelegate> delegate;
 @property tagRemote *tagRemotes;
 @property NoMenuTextField *tfName;
+@property (nonatomic, strong) UIFont *viewFont;
 
 @end

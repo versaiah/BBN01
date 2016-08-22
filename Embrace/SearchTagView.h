@@ -20,5 +20,6 @@
 @property UARTPeripheral *currentPeripheral;
 @property NSMutableArray *tagArrayOrg;
 @property NSMutableArray *tagArrayNew;
+@property (nonatomic, strong) UIFont *viewFont;
 
 @end

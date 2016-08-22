@@ -53,3 +53,7 @@ NSString *const KADtagIndex  = @"index";
 }
 
 @end
+
+@implementation tagController
+
+@end

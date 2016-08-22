@@ -17,7 +17,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGSize screenSize = [[UIScreen mainScreen] applicationFrame].size;
-    CGFloat sg = screenSize.height / 2208;
+    CGFloat sgh = screenSize.height / 2208;
+    CGFloat sgw = screenSize.width / 1242;
+    _viewFont = [UIFont boldSystemFontOfSize:16];
     
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGMissing"]];
     bgView.frame = self.view.bounds;
@@ -25,7 +27,7 @@
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180 * sg, 180 * sg);
+    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
@@ -33,20 +35,20 @@
     NSString *strTitle = [NSString stringWithFormat: @"TAG %03lu  -  %@", (unsigned long)_tagRemotes.index, [_tagRemotes.name uppercaseString]];
     
     UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, 300, 40)];
-    [labTitle setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labTitle setFont: _viewFont];
     labTitle.textColor = [UIColor whiteColor];
     labTitle.text = strTitle;
     [self.view addSubview:labTitle];
     
     UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 100, 60, 40)];
-    [labName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labName setFont: _viewFont];
     labName.text = @"Name :";
     [self.view addSubview:labName];
     
     NSString *strName = [NSString stringWithString:_tagRemotes.name];
     
     _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 109, 120, 24)];
-    [_tfName setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [_tfName setFont: _viewFont];
     _tfName.text = strName;
     _tfName.delegate = self;
     _tfName.borderStyle =  UITextBorderStyleRoundedRect;
@@ -55,37 +57,40 @@
     NSString *strActive = @"Active : Yes";
     
     UILabel *labActive = [[UILabel alloc] initWithFrame:CGRectMake(35, 125, 300, 40)];
-    [labActive setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];    labActive.text = strActive;
+    [labActive setFont: _viewFont];    labActive.text = strActive;
     [self.view addSubview:labActive];
     
     NSString *strStatus = @"Status : MISSING";
     
     UILabel *labStatus = [[UILabel alloc] initWithFrame:CGRectMake(35, 150, 300, 40)];
-    [labStatus setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [labStatus setFont: _viewFont];
     labStatus.textColor = [UIColor redColor];
     labStatus.text = strStatus;
     [self.view addSubview:labStatus];
     
     UIButton *btnRename = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnRename addTarget:self action:@selector(BtnRenameClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnRename.frame = CGRectMake(30, 190, 400 * sg, 150 * sg);
+    btnRename.frame = CGRectMake(109*sgw, 900*sgh, 332*sgw, 143*sgh);
     btnRename.backgroundColor = COLORRGB(0x030303);
+    [btnRename.titleLabel setFont:_viewFont];
     [btnRename setTitle:@"RENAME" forState:UIControlStateNormal];
     [btnRename setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnRename];
     
     UIButton *btnDisable = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnDisable addTarget:self action:@selector(BtnDisableClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnDisable.frame = CGRectMake(btnRename.frame.origin.x + btnRename.frame.size.width + 5, 190, 400 * sg, 150 * sg);
+    btnDisable.frame = CGRectMake(459*sgw, 900*sgh, 332*sgw, 143*sgh);
     btnDisable.backgroundColor = COLORRGB(0x6D6D6D);
+    [btnDisable.titleLabel setFont:_viewFont];
     [btnDisable setTitle:@"DISABLE" forState:UIControlStateNormal];
     [btnDisable setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnDisable];
     
     UIButton *btnRemove = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnRemove addTarget:self action:@selector(BtnRemoveClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnRemove.frame = CGRectMake(btnDisable.frame.origin.x + btnDisable.frame.size.width + 5, 190, 400 * sg, 150 * sg);
+    btnRemove.frame = CGRectMake(805*sgw, 900*sgh, 332*sgw, 143*sgh);
     btnRemove.backgroundColor = COLORRGB(0x390203);
+    [btnRemove.titleLabel setFont:_viewFont];
     [btnRemove setTitle:@"REMOVE" forState:UIControlStateNormal];
     [btnRemove setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnRemove];
@@ -96,12 +101,12 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)BTNBackClick:(UIButton *)sender
+- (IBAction)BTNBackClick:(UIButton *)sender
 {
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)BtnRenameClick:(UIButton *)sender
+- (IBAction)BtnRenameClick:(UIButton *)sender
 {
     if ([_tfName.text isEqualToString:_tagRemotes.name]) {
         return;
@@ -117,13 +122,13 @@
     }
 }
 
-- (void)BtnDisableClick:(UIButton *)sender
+- (IBAction)BtnDisableClick:(UIButton *)sender
 {
     [self.delegate tagDisable:_tagRemotes.index-1];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)BtnRemoveClick:(UIButton *)sender
+- (IBAction)BtnRemoveClick:(UIButton *)sender
 {
     [self.delegate tagRemove:_tagRemotes.index-1];
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
@@ -138,8 +143,8 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
-    if (_tfName.text.length == 0) {
-        _tfName.text = _tagRemotes.name;
+    if (textField.text.length == 0) {
+        textField.text = _tagRemotes.name;
     }
     return false;
 }
