@@ -15,6 +15,8 @@
 @implementation SearchTagView
 
 NSTimer *timerSearch;
+//UILabel *labSelect;
+UILabel *labSearch;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -33,14 +35,15 @@ NSTimer *timerSearch;
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
+    btnBack.frame = CGRectMake(30*sgw, 30*sgh, 150*sgw, 150*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
     
     NSString *strSearch = @"Looking for tags...";
     
-    UILabel *labSearch = [[UILabel alloc] initWithFrame:CGRectMake(85, 95, 200, 30)];
+    labSearch = [[UILabel alloc] initWithFrame:CGRectMake(321*sgw, 500*sgh, 600*sgw, 100*sgh)];
+    labSearch.textAlignment = NSTextAlignmentCenter;
     [labSearch setFont: _viewFont];
     labSearch.text = strSearch;
     [self.view addSubview:labSearch];
@@ -51,14 +54,14 @@ NSTimer *timerSearch;
     [labFound setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
     labFound.text = strFound;
     [self.view addSubview:labFound];
-    */
+    
     NSString *strSelect = @"Select a Tag to Add";
     
-    UILabel *labSelect = [[UILabel alloc] initWithFrame:CGRectMake(90, 200, 200, 30)];
+    labSelect = [[UILabel alloc] initWithFrame:CGRectMake(90, 200, 200, 30)];
     [labSelect setFont: _viewFont];
     labSelect.text = strSelect;
     [self.view addSubview:labSelect];
-    
+    */
     _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 460*sgh, 1071*sgw, 604*sgh)];
     _tagView.delegate = self;
     _tagView.colorTag = COLORRGB(0xffffff);
@@ -140,7 +143,7 @@ NSTimer *timerSearch;
         }
     }
 }
-
+/*
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
     NSLog(@"Did connect peripheral %@", peripheral.name);
@@ -164,7 +167,7 @@ NSTimer *timerSearch;
         }
     }
 }
-
+*/
 - (void)scanTimeout:(NSTimer*)timer
 {
     switch (self.state) {
@@ -197,6 +200,8 @@ NSTimer *timerSearch;
         tmp = [NSString stringWithFormat: @"New\n                \n%04lX", (unsigned long)tagTmp.minor];
         [_tagView addTagToLastWithIndex:tmp index:tagTmp.index];
     }
+    //labSelect.hidden = TRUE;
+    labSearch.hidden = TRUE;
      _tagView.hidden = FALSE;
 }
 
