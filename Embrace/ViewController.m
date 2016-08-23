@@ -175,6 +175,11 @@ UIButton    *btnSetup;
     [self.cm connectPeripheral:peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
 }
 
+- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral
+{
+    NSLog(@"Faild to Connect with peripheral %@", peripheral.name);
+}
+
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral
 {
     NSLog(@"Connect to peripheral %@", peripheral.name);
@@ -548,6 +553,8 @@ UIButton    *btnSetup;
 
 - (void)tagDisable:(NSInteger)index
 {
+    if (self.state != CONNECTED) return;
+    
     tagRemote *tagTmp = _tagArray[index];
     
     tagTmp.enable = 0;
@@ -560,6 +567,8 @@ UIButton    *btnSetup;
 
 - (void)tagEnable:(NSInteger)index
 {
+    if (self.state != CONNECTED) return;
+    
     tagRemote *tagTmp = _tagArray[index];
     
     tagTmp.enable = 1;
@@ -579,9 +588,8 @@ UIButton    *btnSetup;
 
 - (void)tagAddAfterSearch:(tagRemote *)tagTarget
 {
-    if (self.state != CONNECTED) {
-        return;
-    }
+    if (self.state != CONNECTED) return;
+    
     NSInteger index = [self checkEmptytags];
     
     tagRemote *tagTmp = [[tagRemote alloc] init];
@@ -608,11 +616,11 @@ UIButton    *btnSetup;
 
 - (void)tagRemove:(NSInteger)index
 {
-    NSString *tmp;
+    if (self.state != CONNECTED) return;
     
     tagRemote *tagTmp = _tagArray[index];
     
-    tmp = [NSString stringWithFormat: @"%@\n            %03lu\n%04lX", tagTmp.name,(unsigned long)tagTmp.index, (unsigned long)tagTmp.minor];
+    NSString *tmp = [NSString stringWithFormat: @"%@\n            %03lu\n%04lX", tagTmp.name,(unsigned long)tagTmp.index, (unsigned long)tagTmp.minor];
     if (tagTmp.enable == 1) {
         [_tagView removeTag:tmp];
     } else {
@@ -672,6 +680,7 @@ UIButton    *btnSetup;
 
 - (void)setController:(NSInteger)interval timeout:(NSInteger)timeout notify:(NSInteger)notify
 {
+    if (self.state != CONNECTED) return;
     _tagControll.interval = interval;
     _tagControll.timeout = timeout;
     _tagControll.NotifyEnable = notify;
