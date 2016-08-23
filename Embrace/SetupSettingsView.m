@@ -32,22 +32,32 @@
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
     
-    UILabel *labInterval = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 540*sgh, 920*sgw, 60*sgh)];
+    UILabel *labInterval = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 530*sgh, 500*sgw, 60*sgh)];
     [labInterval setFont:_viewFont];
-    labInterval.text = @"Scan Interval :              seconds";
+    labInterval.text = @"Scan Interval :";
     [self.view addSubview:labInterval];
     
-    UILabel *labTimeout = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 650*sgh, 920*sgw, 60*sgh)];
+    UILabel *labSecond1 = [[UILabel alloc] initWithFrame:CGRectMake(760*sgw, 530*sgh, 300*sgw, 60*sgh)];
+    [labSecond1 setFont:_viewFont];
+    labSecond1.text = @"seconds";
+    [self.view addSubview:labSecond1];
+    
+    UILabel *labTimeout = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 650*sgh, 500*sgw, 60*sgh)];
     [labTimeout setFont:_viewFont];
-    labTimeout.text = @"Scan Timeout :              seconds";
+    labTimeout.text = @"Scan Timeout :";
     [self.view addSubview:labTimeout];
     
-    UILabel *labNotify = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 760*sgh, 450*sgw, 60*sgh)];
+    UILabel *labSecond2 = [[UILabel alloc] initWithFrame:CGRectMake(760*sgw, 650*sgh, 300*sgw, 60*sgh)];
+    [labSecond2 setFont:_viewFont];
+    labSecond2.text = @"seconds";
+    [self.view addSubview:labSecond2];
+    
+    UILabel *labNotify = [[UILabel alloc] initWithFrame:CGRectMake(135*sgw, 770*sgh, 450*sgw, 60*sgh)];
     [labNotify setFont:_viewFont];
     labNotify.text = @"Notifications :";
     [self.view addSubview:labNotify];
     
-    _tfInterval = [[NoMenuTextField alloc] initWithFrame:CGRectMake(600*sgw, 535*sgh, 140*sgw, 80*sgh)];
+    _tfInterval = [[NoMenuTextField alloc] initWithFrame:CGRectMake(600*sgw, 525*sgh, 140*sgw, 80*sgh)];
     _tfInterval.keyboardType = UIKeyboardTypeNumberPad;
     [_tfInterval setFont:[UIFont systemFontOfSize:12]];
     _tfInterval.delegate = self;
@@ -55,7 +65,7 @@
     _tfInterval.borderStyle =  UITextBorderStyleRoundedRect;
     [self.view addSubview:_tfInterval];
     
-    _tfTimeout = [[NoMenuTextField alloc] initWithFrame:CGRectMake(620*sgw, 645*sgh, 140*sgw, 80*sgh)];
+    _tfTimeout = [[NoMenuTextField alloc] initWithFrame:CGRectMake(600*sgw, 645*sgh, 140*sgw, 80*sgh)];
     _tfTimeout.keyboardType = UIKeyboardTypeNumberPad;
     [_tfTimeout setFont:[UIFont systemFontOfSize:12]];
     _tfTimeout.delegate = self;
@@ -65,7 +75,7 @@
     
     _btnNotifyEnable = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btnNotifyEnable addTarget:self action:@selector(BTNNotifyEnableClick:) forControlEvents:UIControlEventTouchUpInside];
-    _btnNotifyEnable.frame = CGRectMake(600*sgw, 750*sgh, 250*sgw, 80*sgh);
+    _btnNotifyEnable.frame = CGRectMake(600*sgw, 760*sgh, 250*sgw, 80*sgh);
     _btnNotifyEnable.backgroundColor = COLORRGB(0x040746);
     _btnNotifyEnable.layer.cornerRadius = 3;
     [_btnNotifyEnable.titleLabel setFont:_viewFont];
