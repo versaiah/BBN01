@@ -91,7 +91,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (range.location >= 16)
+    if (range.location >= 12)
         return NO;
     return YES;
 }

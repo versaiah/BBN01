@@ -27,43 +27,43 @@
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
+    btnBack.frame = CGRectMake(30*sgw, 30*sgh, 150*sgw, 150*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
     
     NSString *strTitle = [NSString stringWithFormat: @"TAG %03lu  -  %@", (unsigned long)_tagRemotes.index, [_tagRemotes.name uppercaseString]];
     
-    UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, 300, 40)];
+    UILabel *labTitle = [[UILabel alloc] initWithFrame:CGRectMake(116*sgw, 350*sgh, 1013*sgw, 60*sgh)];
     [labTitle setFont:_viewFont];
     labTitle.textColor = [UIColor whiteColor];
     labTitle.text = strTitle;
     [self.view addSubview:labTitle];
     
-    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 100, 60, 40)];
+    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(139*sgw, 530*sgh, 216*sgw, 60*sgh)];
     [labName setFont:_viewFont];
     labName.text = @"Name :";
     [self.view addSubview:labName];
     
     NSString *strName = [NSString stringWithString:_tagRemotes.name];
     
-    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 109, 120, 24)];
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(355*sgw, 525*sgh, 528*sgw, 80*sgh)];
     [_tfName setFont:_viewFont];
     _tfName.text = strName;
     _tfName.delegate = self;
     _tfName.borderStyle =  UITextBorderStyleRoundedRect;
     [self.view addSubview:_tfName];
     
-    NSString *strActive = @"Active : No";
+    NSString *strActive = @"Active :  No";
     
-    UILabel *labActive = [[UILabel alloc] initWithFrame:CGRectMake(35, 125, 300, 40)];
+    UILabel *labActive = [[UILabel alloc] initWithFrame:CGRectMake(139*sgw, 650*sgh, 600*sgw, 60*sgh)];
     [labActive setFont:_viewFont];
     labActive.text = strActive;
     [self.view addSubview:labActive];
     
-    NSString *strStatus = @"Status : N/A";
+    NSString *strStatus = @"Status :  N/A";
     
-    UILabel *labStatus = [[UILabel alloc] initWithFrame:CGRectMake(35, 150, 300, 40)];
+    UILabel *labStatus = [[UILabel alloc] initWithFrame:CGRectMake(139*sgw, 770*sgh, 600*sgw, 60*sgh)];
     [labStatus setFont:_viewFont];
     labStatus.text = strStatus;
     [self.view addSubview:labStatus];
@@ -108,10 +108,6 @@
 
 - (IBAction)BtnRenameClick:(UIButton *)sender
 {
-    if ([_tfName.text isEqualToString:_tagRemotes.name]) {
-        return;
-    }
-    
     [_tfName resignFirstResponder];
     if (_tfName.text.length != 0) {
         _tagRemotes.name = _tfName.text;
@@ -136,7 +132,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (range.location >= 16)
+    if (range.location >= 12)
         return NO;
     return YES;
 }
