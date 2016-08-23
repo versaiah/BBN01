@@ -73,7 +73,7 @@ UIButton    *btnSetup;
     
     btnSetup = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnSetup addTarget:self action:@selector(BTNSetupClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnSetup.frame = CGRectMake(9, 4, 150*sgw, 150*sgh);
+    btnSetup.frame = CGRectMake(30*sgw, 30*sgh, 150*sgw, 150*sgh);
     [btnSetup setBackgroundImage:[UIImage imageNamed:@"ImageBTNSetup"] forState:UIControlStateNormal];
     [btnSetup setShowsTouchWhenHighlighted:YES];
     btnSetup.userInteractionEnabled = FALSE;
@@ -97,7 +97,7 @@ UIButton    *btnSetup;
     [_tagView layoutTagviews];
     [self.view addSubview:_tagView];
     
-    _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 1226*sgh, 1071*sgw, 604*sgh)];
+    _tagView2 = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 1224*sgh, 1071*sgw, 604*sgh)];
     _tagView2.delegate = self;
     _tagView2.colorTag = COLORRGB(0xffffff);
     _tagView2.colorTagBg = COLORRGB(0x848484);
@@ -115,7 +115,7 @@ UIButton    *btnSetup;
     [_tagView2 layoutTagviews];
     [self.view addSubview:_tagView2];
     
-    labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(190, 70, 100, 20)];
+    labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(850*sgw, 360*sgh, 300*sgw, 46*sgh)];
     [labConnectStatus setFont:[UIFont boldSystemFontOfSize:12]];
     labConnectStatus.textColor = [UIColor whiteColor];
     labConnectStatus.text = connectStatusArray[self.state];
