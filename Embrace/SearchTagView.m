@@ -120,7 +120,7 @@ NSTimer *timerSearch;
         NSString *strTmp = [NSString stringWithFormat:@"%02X%02X", digest[0], digest[1]];
         if (strTmp != nil) {
             unsigned long lonTmp = strtoul([strTmp UTF8String],0,16);
-            if ((lonTmp == 0x5900) && (_tagArrayNew.count < MAX_TAGS)) {
+            if ((lonTmp == 0x5900) && (_tagArrayNew.count < 6)) {
                 strTmp = [NSString stringWithFormat:@"%02X%02X", digest[22], digest[23]];
                 for (tagRemote *tmp in _tagArrayOrg) {
                     if (tmp.minor == strtoul([strTmp UTF8String],0,16)) {

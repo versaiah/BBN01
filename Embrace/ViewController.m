@@ -161,7 +161,6 @@ UIButton    *btnSetup;
     NSLog(@"Find peripheral %@", peripheral.name);
     [self.cm stopScan];
     self.state = CONNECTING;
-    
     /*
     NSMutableString* nsmstring=[NSMutableString stringWithString:@"\n"];
     [nsmstring appendString:@"Peripheral Info:"];
@@ -169,8 +168,8 @@ UIButton    *btnSetup;
     [nsmstring appendFormat:@"RSSI: %@\n",RSSI];
     
     [nsmstring appendFormat:@"adverisement:%@",advertisementData];
-    NSLog(@"%@",nsmstring);*/
-
+    NSLog(@"%@",nsmstring);
+     */
     self.currentPeripheral = [[UARTPeripheral alloc] initWithPeripheral:peripheral delegate:self];
     [self.cm connectPeripheral:peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
 }
