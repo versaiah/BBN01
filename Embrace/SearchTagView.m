@@ -62,7 +62,7 @@ UILabel *labSearch;
     labSelect.text = strSelect;
     [self.view addSubview:labSelect];
     */
-    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(86*sgw, 460*sgh, 1071*sgw, 604*sgh)];
+    _tagView = [[EYTagView alloc]initWithFrame:CGRectMake(90*sgw, 460*sgh, 1066*sgw, 604*sgh)];
     _tagView.delegate = self;
     _tagView.colorTag = COLORRGB(0xffffff);
     _tagView.colorTagBg = COLORRGB(0x0432FF);

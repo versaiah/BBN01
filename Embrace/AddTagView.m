@@ -27,7 +27,7 @@
     
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnBack addTarget:self action:@selector(BTNBackClick:) forControlEvents:UIControlEventTouchUpInside];
-    btnBack.frame = CGRectMake(5, 2, 180*sgw, 180*sgh);
+    btnBack.frame = CGRectMake(30*sgw, 30*sgh, 150*sgw, 150*sgh);
     [btnBack setBackgroundImage:[UIImage imageNamed:@"ImageBTNLeftArrow"] forState:UIControlStateNormal];
     [btnBack setShowsTouchWhenHighlighted:YES];
     [self.view addSubview:btnBack];
@@ -43,7 +43,7 @@
     [self.view addSubview:btnAdd];
     
     UIButton *btnTag = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnTag.frame = CGRectMake(120, 100, 80, 54);
+    btnTag.frame = CGRectMake(476*sgw, 502*sgh, 290*sgw, 220*sgh);
     [btnTag.titleLabel setFont:[UIFont systemFontOfSize:14]];
     btnTag.backgroundColor = COLORRGB(0x0432FF);
     btnTag.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -53,12 +53,12 @@
     btnTag.enabled = FALSE;
     [self.view addSubview:btnTag];
     
-    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(35, 150, 60, 40)];
+    UILabel *labName = [[UILabel alloc] initWithFrame:CGRectMake(130*sgw, 790*sgh, 210*sgw, 60*sgh)];
     [labName setFont: _viewFont];
     labName.text = @"Name :";
     [self.view addSubview:labName];
     
-    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(95, 159, 120, 24)];
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(360*sgw, 785*sgh, 400*sgw, 80*sgh)];
     [_tfName setFont: _viewFont];
     _tfName.text = @"New";
     _tfName.delegate = self;
