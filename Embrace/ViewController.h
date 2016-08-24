@@ -17,6 +17,8 @@
 #import "AddTagView.h"
 #import "SetupSettingsView.h"
 
+#define MAX_TAGS  5
+
 @interface ViewController : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate, ActiveInfoViewDelegate, MissingInfoViewDelegate, InactiveInfoViewDelegate, SetupSettingsViewDelegate>;
 
 @property (strong, nonatomic) IBOutlet EYTagView *tagView;

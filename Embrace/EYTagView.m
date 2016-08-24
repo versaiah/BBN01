@@ -29,12 +29,12 @@ CGRect buttonFrame;
     [super setSelected:selected];
     if (selected) {
         [self setBackgroundColor:_colorBg];
-        self.layer.borderColor=_colorBg.CGColor;
+        self.layer.borderColor = _colorBg.CGColor;
         [self setTitleColor:_colorText forState:UIControlStateSelected];
     } else {
         [self setBackgroundColor:COLORRGB(0xffffff)];
-        self.layer.borderColor=_colorTagBorder.CGColor;
-        self.layer.borderWidth=1;
+        self.layer.borderColor = _colorTagBorder.CGColor;
+        self.layer.borderWidth = 1;
         [self setTitleColor:_colorTagUnSelected forState:UIControlStateNormal];
     }
     [self setNeedsDisplay];
@@ -79,44 +79,45 @@ CGRect buttonFrame;
 
 - (void)commonInit
 {
-    _newHeight=self.frame.size.height;
-    _type=EYTagView_Type_Edit;
-    _tagHeight=54;
-    _tagPaddingSize=CGSizeMake(6, 6);
-    _textPaddingSize=CGSizeMake(0, 3);
-    _fontTag=[UIFont systemFontOfSize:14];
-    self.fontInput=[UIFont systemFontOfSize:14];
-    _colorTag=COLORRGB(0xffffff);
-    _colorTagUnselected=COLORRGB(0xa1a2a2);
-    _colorInput=COLORRGB(0x2ab44e);
-    _colorInputPlaceholder=COLORRGB(0x2ab44e);
-    _colorTagBg=COLORRGB(0x2ab44e);
-    _colorTagBgDisable=COLORRGB(0x848484);
-    _colorTagBgDisconnect=COLORRGB(0x750302);
-    _colorTagBoard=COLORRGB(0xdddddd);
-    _colorInputBg=COLORRGB(0xbbbbbb);
-    _colorInputBoard=COLORRGB(0x2ab44e);
-    _viewMaxHeight=500;
-    self.clipsToBounds=YES;
-    self.backgroundColor=COLORRGB(0xffffff);
+    _newHeight = self.frame.size.height;
+    _type = EYTagView_Type_Edit;
+    _tagHeight = 54;
+    _tagWidth = 80;
+    _tagPaddingSize = CGSizeMake(6, 6);
+    _textPaddingSize = CGSizeMake(0, 0);
+    _fontTag = [UIFont systemFontOfSize:[UIFont systemFontSize]]; //[UIFont systemFontOfSize:14];
+    self.fontInput = [UIFont systemFontOfSize:[UIFont systemFontSize]]; //[UIFont systemFontOfSize:14];
+    _colorTag = COLORRGB(0xffffff);
+    _colorTagUnselected = COLORRGB(0xa1a2a2);
+    _colorInput = COLORRGB(0x2ab44e);
+    _colorInputPlaceholder = COLORRGB(0x2ab44e);
+    _colorTagBg = COLORRGB(0x2ab44e);
+    _colorTagBgDisable = COLORRGB(0x848484);
+    _colorTagBgDisconnect = COLORRGB(0x750302);
+    _colorTagBoard = COLORRGB(0xdddddd);
+    _colorInputBg = COLORRGB(0xbbbbbb);
+    _colorInputBoard = COLORRGB(0x2ab44e);
+    _viewMaxHeight = 500;
+    self.clipsToBounds = YES;
+    self.backgroundColor = COLORRGB(0xffffff);
     _maxSelected = 0;
     _tagButtonSelecteds = 0;
     
-    _tagButtons=[NSMutableArray new];
-    _tagArrows=[NSMutableArray new];
-    _tagStrings=[NSMutableArray new];
-    _tagStringsSelected=[NSMutableArray new];
+    _tagButtons = [NSMutableArray new];
+    _tagArrows = [NSMutableArray new];
+    _tagStrings = [NSMutableArray new];
+    _tagStringsSelected = [NSMutableArray new];
     
     UIScrollView* sv = [[UIScrollView alloc] initWithFrame:self.bounds];
-    sv.autoresizingMask=UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    sv.contentSize=sv.frame.size;
-    sv.contentSize=CGSizeMake(sv.frame.size.width, sv.frame.size.height * 2);
-    sv.indicatorStyle=UIScrollViewIndicatorStyleDefault;
+    sv.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    sv.contentSize = sv.frame.size;
+    sv.contentSize = CGSizeMake(sv.frame.size.width, sv.frame.size.height * 2);
+    sv.indicatorStyle = UIScrollViewIndicatorStyleDefault;
     sv.backgroundColor = self.backgroundColor;
     sv.showsVerticalScrollIndicator = YES;
     sv.showsHorizontalScrollIndicator = NO;
     [self addSubview:sv];
-    _svContainer=sv;
+    _svContainer = sv;
     
     UIButton *tf = [UIButton buttonWithType:UIButtonTypeCustom];
     tf.frame = CGRectMake(0, 0, 0, _tagHeight);
@@ -129,17 +130,14 @@ CGRect buttonFrame;
     //tf.autocorrectionType = UITextAutocorrectionTypeNo;
     [tf addTarget:self action:@selector(btnAddClicked:)forControlEvents:UIControlEventTouchUpInside];
     //tf.delegate = self;
-    //tf.placeholder=EYLOCALSTRING(@"Add Tag");
+    //tf.placeholder = EYLOCALSTRING(@"Add Tag");
     //tf.returnKeyType = UIReturnKeyDone;
     [_svContainer addSubview:tf];
-    _tfInput=tf;
-    
-    buttonFrame.size.width = 80;
-    buttonFrame.size.height = 54;
+    _tfInput = tf;
     
     UITapGestureRecognizer* panGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector
     (handlerTapGesture:)];
-    panGestureRecognizer.numberOfTapsRequired=1;
+    panGestureRecognizer.numberOfTapsRequired = 1;
     [self addGestureRecognizer:panGestureRecognizer];
 }
 #pragma mark -
@@ -183,15 +181,15 @@ CGRect buttonFrame;
 }
 -(UIView*)newArrowView
 {
-    UIView* vArrow=[[UIView alloc]initWithFrame:CGRectMake(0, 0, _tagHeight*1.5f, _tagHeight)];
-    vArrow.backgroundColor=[UIColor clearColor];
+    UIView* vArrow = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _tagHeight*1.5f, _tagHeight)];
+    vArrow.backgroundColor = [UIColor clearColor];
     {
-        UILabel* lb=[[UILabel alloc]initWithFrame:vArrow.frame];
-        lb.textAlignment=NSTextAlignmentCenter;
-        lb.text=@"···>";
-        lb.font=[UIFont systemFontOfSize:13];
-        lb.textColor=_colorTagBg;
-        lb.backgroundColor=[UIColor clearColor];
+        UILabel* lb = [[UILabel alloc]initWithFrame:vArrow.frame];
+        lb.textAlignment = NSTextAlignmentCenter;
+        lb.text = @"···>";
+        lb.font = [UIFont systemFontOfSize:13];
+        lb.textColor = _colorTagBg;
+        lb.backgroundColor = [UIColor clearColor];
         [vArrow addSubview:lb];
     }
     
@@ -200,10 +198,22 @@ CGRect buttonFrame;
 
 -(void)layoutTagviews
 {
-    float oldContentHeight=_svContainer.contentSize.height;
-    float offsetX=_tagPaddingSize.width,offsetY=_tagPaddingSize.height;
+    buttonFrame.size.width = _tagWidth;
+    buttonFrame.size.height = _tagHeight;
+    if (_tagHeight < 50) {
+        _fontTag = [UIFont systemFontOfSize:12];
+    } else if (_tagHeight < 65) {
+        _fontTag = [UIFont systemFontOfSize:16];
+    } else if (_tagHeight < 72) {
+        _fontTag = [UIFont systemFontOfSize:18];
+    }
     
-    if (_type==EYTagView_Type_Flow){
+    _tagPaddingSize.width = (_svContainer.contentSize.width - _tagWidth * 3) / 4;
+    _tagPaddingSize.height = (_svContainer.contentSize.height - _tagHeight * 2) / 3;
+    float oldContentHeight = _svContainer.contentSize.height;
+    float offsetX = _tagPaddingSize.width, offsetY = _tagPaddingSize.height;
+    
+    if (_type == EYTagView_Type_Flow){
         for (UIView* v in _tagArrows) {
             [v removeFromSuperview];
         }
@@ -211,82 +221,82 @@ CGRect buttonFrame;
 
     }
     
-    BOOL needLayoutAgain=NO;// just for too large text
-    BOOL shouldFinishLayout=NO;//just for break line
-    int currentLine=0;
-    for (int i=0; i<_tagButtons.count; i++) {
-        EYCheckBoxButton* tagButton=_tagButtons[i];
-        tagButton.hidden=NO;
+    BOOL needLayoutAgain = NO;// just for too large text
+    BOOL shouldFinishLayout = NO;//just for break line
+    int currentLine = 0;
+    for (int i = 0; i < _tagButtons.count; i++) {
+        EYCheckBoxButton* tagButton = _tagButtons[i];
+        tagButton.hidden = NO;
         if (shouldFinishLayout) {
-            tagButton.hidden=YES;
+            tagButton.hidden = YES;
             continue;
         }
         tagButton.frame = buttonFrame;
         CGRect frame = tagButton.frame;
         
-        if (tagButton.frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
+        if (tagButton.frame.size.width + _tagPaddingSize.width*2 > _svContainer.contentSize.width) {
             NSLog(@"!!!  tagButton width tooooooooo large");
             [tagButton removeFromSuperview];
             [_tagButtons removeObjectAtIndex:i];
             [_tagStrings removeObjectAtIndex:i];
-            needLayoutAgain=YES;
+            needLayoutAgain = YES;
             break;
         }else{
             //button
-            if ((offsetX+tagButton.frame.size.width+_tagPaddingSize.width)
-                <=_svContainer.contentSize.width) {
-                frame.origin.x=offsetX;
-                frame.origin.y=offsetY;
-                offsetX+=tagButton.frame.size.width+_tagPaddingSize.width;
-            }else{//break line
+            if ((offsetX + tagButton.frame.size.width + _tagPaddingSize.width)
+                <= _svContainer.contentSize.width) {
+                frame.origin.x = offsetX;
+                frame.origin.y = offsetY;
+                offsetX += tagButton.frame.size.width + _tagPaddingSize.width;
+            } else {//break line
                 currentLine++;
-                if (_numberOfLines!=0
-                    && _numberOfLines<=currentLine) {
-                    shouldFinishLayout=YES;
-                    if (_type==EYTagView_Type_Flow
-                        && i!=0) {//not first one
+                if (_numberOfLines != 0
+                    && _numberOfLines <= currentLine) {
+                    shouldFinishLayout = YES;
+                    if (_type == EYTagView_Type_Flow
+                        && i != 0) {//not first one
                         [_tagArrows.lastObject removeFromSuperview];
                         [_tagArrows removeLastObject];
                     }
-                    tagButton.hidden=YES;
+                    tagButton.hidden = YES;
                     continue;
                 }
                 
-                offsetX=_tagPaddingSize.width;
-                offsetY+=_tagHeight+_tagPaddingSize.height;
+                offsetX = _tagPaddingSize.width;
+                offsetY += _tagHeight+_tagPaddingSize.height;
                 
-                frame.origin.x=offsetX;
-                frame.origin.y=offsetY;
-                offsetX+=tagButton.frame.size.width+_tagPaddingSize.width;
+                frame.origin.x = offsetX;
+                frame.origin.y = offsetY;
+                offsetX += tagButton.frame.size.width + _tagPaddingSize.width;
             }
             tagButton.frame = frame;
             //arrow
-            if (_type==EYTagView_Type_Flow
-                && i!=_tagButtons.count-1) {
-                UIView* vArrow=[self newArrowView];
+            if (_type == EYTagView_Type_Flow
+                && i != _tagButtons.count -1) {
+                UIView* vArrow = [self newArrowView];
                 
                 frame=vArrow.frame;
-                if ((offsetX+vArrow.frame.size.width+_tagPaddingSize.width)
-                    <=_svContainer.contentSize.width) {
-                    frame.origin.x=offsetX;
-                    frame.origin.y=offsetY;
-                    offsetX+=vArrow.frame.size.width+_tagPaddingSize.width;
+                if ((offsetX + vArrow.frame.size.width + _tagPaddingSize.width)
+                    <= _svContainer.contentSize.width) {
+                    frame.origin.x = offsetX;
+                    frame.origin.y = offsetY;
+                    offsetX += vArrow.frame.size.width + _tagPaddingSize.width;
                 }else{//break line
                     currentLine++;
-                    if (_numberOfLines!=0
-                        && _numberOfLines<=currentLine) {
-                        shouldFinishLayout=YES;
+                    if (_numberOfLines != 0
+                        && _numberOfLines <= currentLine) {
+                        shouldFinishLayout = YES;
                         continue;
                     }
                     
-                    offsetX=_tagPaddingSize.width;
-                    offsetY+=_tagHeight+_tagPaddingSize.height;
+                    offsetX = _tagPaddingSize.width;
+                    offsetY += _tagHeight+_tagPaddingSize.height;
                     
-                    frame.origin.x=offsetX;
-                    frame.origin.y=offsetY;
-                    offsetX+=vArrow.frame.size.width+_tagPaddingSize.width;
+                    frame.origin.x = offsetX;
+                    frame.origin.y = offsetY;
+                    offsetX += vArrow.frame.size.width + _tagPaddingSize.width;
                 }
-                vArrow.frame=frame;
+                vArrow.frame = frame;
                 [_tagArrows addObject:vArrow];
                 [_svContainer addSubview:vArrow];
             }
@@ -319,40 +329,41 @@ CGRect buttonFrame;
         //frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2 + 15);
         _tfInput.frame = frame;
         
-        if (_tfInput.frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
+        if (_tfInput.frame.size.width+_tagPaddingSize.width*2 > _svContainer.contentSize.width) {
             NSLog(@"!!!  _tfInput width tooooooooo large");
         } else {
-            CGRect frame=_tfInput.frame;
-            if ((offsetX+_tfInput.frame.size.width+_tagPaddingSize.width)
+            CGRect frame = _tfInput.frame;
+            if ((offsetX + _tfInput.frame.size.width + _tagPaddingSize.width)
                 <=_svContainer.contentSize.width) {
-                frame.origin.x=offsetX;
-                frame.origin.y=offsetY;
-                offsetX+=_tfInput.frame.size.width+_tagPaddingSize.width;
+                frame.origin.x = offsetX;
+                frame.origin.y = offsetY;
+                offsetX += _tfInput.frame.size.width + _tagPaddingSize.width;
             }else{
-                offsetX=_tagPaddingSize.width;
-                offsetY+=_tagHeight+_tagPaddingSize.height;
-                frame.origin.x=offsetX;
-                frame.origin.y=offsetY;
-                offsetX+=_tfInput.frame.size.width+_tagPaddingSize.width;
+                offsetX = _tagPaddingSize.width;
+                offsetY += _tagHeight+_tagPaddingSize.height;
+                frame.origin.x = offsetX;
+                frame.origin.y = offsetY;
+                offsetX += _tfInput.frame.size.width + _tagPaddingSize.width;
             }
-            _tfInput.frame=frame;
+            _tfInput.frame = frame;
         }
     }
     
-    _svContainer.contentSize=CGSizeMake(_svContainer.frame.size.width, offsetY+_tagHeight+_tagPaddingSize.height);
+    //_svContainer.contentSize = CGSizeMake(_svContainer.frame.size.width, offsetY + _tagHeight + _tagPaddingSize.height);
+    _svContainer.contentSize = CGSizeMake(_svContainer.frame.size.width, _viewMaxHeight);
 
-    CGRect frame=_svContainer.frame;
-    frame.size.height=_svContainer.contentSize.height;
-    frame.size.height=MIN(frame.size.height, _viewMaxHeight);
-    _svContainer.frame=frame;
+    CGRect frame = _svContainer.frame;
+    frame.size.height = _svContainer.contentSize.height;
+    frame.size.height = MIN(frame.size.height, _viewMaxHeight);
+    _svContainer.frame = frame;
     
-    float oldHeight=self.frame.size.height;
-    float newHeight=_svContainer.frame.size.height;
+    float oldHeight = self.frame.size.height;
+    float newHeight = _svContainer.frame.size.height;
     
     if (self.translatesAutoresizingMaskIntoConstraints) {//autosizing
-        CGRect frame=self.frame;
-        frame.size.height=newHeight;
-        self.frame=frame;
+        CGRect frame = self.frame;
+        frame.size.height = newHeight;
+        self.frame = frame;
             
         if (!_isInit
             && oldHeight!= newHeight
@@ -378,12 +389,12 @@ CGRect buttonFrame;
 - (EYCheckBoxButton *)tagButtonWithTag:(NSString *)tag
 {
     EYCheckBoxButton *tagBtn = [[EYCheckBoxButton alloc] init];
-    tagBtn.colorBg=_colorTagBgDisconnect;
-    tagBtn.colorTagUnSelected=_colorTagUnselected;
-    tagBtn.colorTagBorder=_colorTagBoard;
+    tagBtn.colorBg = _colorTagBgDisconnect;
+    tagBtn.colorTagUnSelected = _colorTagUnselected;
+    tagBtn.colorTagBorder = _colorTagBoard;
     
-    tagBtn.colorText=_colorTag;
-    tagBtn.selected=YES;
+    tagBtn.colorText = _colorTag;
+    tagBtn.selected = YES;
     [tagBtn.titleLabel setFont:_fontTag];
     [tagBtn setBackgroundColor:_colorTagBgDisconnect];
     [tagBtn setTitleColor:_colorTag forState:UIControlStateNormal];
@@ -408,7 +419,7 @@ CGRect buttonFrame;
     
     btnFrame.size.width = [tagBtn.titleLabel.text sizeWithAttributes:@{NSFontAttributeName:_fontTag}].width + (tagBtn.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2;
     
-    tagBtn.frame=btnFrame;
+    tagBtn.frame = btnFrame;
     return tagBtn;
 }
 
@@ -425,12 +436,12 @@ CGRect buttonFrame;
 
 - (void)addTags:(NSArray *)tags
 {
-    _isInit=YES;
+    _isInit = YES;
     for (NSString *tag in tags) {
         [self addTagToLast:tag];
     }
     [self layoutTagviews];
-    _isInit=NO;
+    _isInit = NO;
 }
 
 - (void)addTags:(NSArray *)tags selectedTags:(NSArray*)selectedTags
@@ -445,7 +456,7 @@ CGRect buttonFrame;
     if (result.count == 0) {
         [_tagStrings addObject:tag];
         
-        EYCheckBoxButton* tagButton=[self tagButtonWithTag:tag];
+        EYCheckBoxButton* tagButton = [self tagButtonWithTag:tag];
         tagButton.index = index;
         [tagButton addTarget:self action:@selector(handlerButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_svContainer addSubview:tagButton];
@@ -460,7 +471,7 @@ CGRect buttonFrame;
     if (result.count == 0) {
         [_tagStrings addObject:tag];
         
-        EYCheckBoxButton* tagButton=[self tagButtonWithTag:tag];
+        EYCheckBoxButton* tagButton = [self tagButtonWithTag:tag];
         [tagButton addTarget:self action:@selector(handlerButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [_svContainer addSubview:tagButton];
         [_tagButtons addObject:tagButton];
@@ -481,7 +492,7 @@ CGRect buttonFrame;
 
 - (void)removeAllTags
 {
-    _isInit=YES;
+    _isInit = YES;
     [_tagStrings removeAllObjects];
     for (UIView* v in _tagArrows) {
         [v removeFromSuperview];
@@ -493,7 +504,7 @@ CGRect buttonFrame;
     }
     [_tagButtons removeAllObjects];
     [self layoutTagviews];
-    _isInit=NO;
+    _isInit = NO;
 }
 
 - (void)removeTags:(NSArray *)tags
@@ -513,7 +524,7 @@ CGRect buttonFrame;
 {
     NSArray *result = [_tagStrings filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF == %@", tag]];
     if (result) {
-        NSInteger index=[_tagStrings indexOfObject:tag];
+        NSInteger index = [_tagStrings indexOfObject:tag];
         [_tagStrings removeObjectAtIndex:index];
         [_tagButtons[index] removeFromSuperview];
         [_tagButtons removeObjectAtIndex:index];
@@ -631,7 +642,7 @@ CGRect buttonFrame;
         return NO;
     }
     [self addTagToLast:textField.text];
-    textField.text=nil;
+    textField.text = nil;
     [self layoutTagviews];
     return NO;
 }
@@ -643,13 +654,13 @@ CGRect buttonFrame;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSString* sting2= [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSString* sting2 = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    CGRect frame=_tfInput.frame;
+    CGRect frame = _tfInput.frame;
     frame.size.width = [sting2 sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2;
-    frame.size.width=MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2);
+    frame.size.width = MAX(frame.size.width, [EYLOCALSTRING(@"Add Tag") sizeWithAttributes:@{NSFontAttributeName:_fontInput}].width + (_tfInput.layer.cornerRadius * 2.0f) + _textPaddingSize.width*2);
     
-    if (frame.size.width+_tagPaddingSize.width*2>_svContainer.contentSize.width) {
+    if (frame.size.width + _tagPaddingSize.width*2 > _svContainer.contentSize.width) {
         NSLog(@"!!!  _tfInput width tooooooooo large");
         return NO;
     }
@@ -723,12 +734,12 @@ CGRect buttonFrame;
 
 -(void)setType:(EYTagView_Type)type
 {
-    _type=type;
-    if (_type==EYTagView_Type_Display
-        || _type==EYTagView_Type_Flow) {
-        self.userInteractionEnabled=NO;
+    _type = type;
+    if (_type == EYTagView_Type_Display
+        || _type == EYTagView_Type_Flow) {
+        self.userInteractionEnabled = NO;
     }else{
-        self.userInteractionEnabled=YES;
+        self.userInteractionEnabled = YES;
     }
     
     switch (_type) {
@@ -736,28 +747,28 @@ CGRect buttonFrame;
         case EYTagView_Type_Edit_Only_Delete:
         {
             for (UIButton* button in _tagButtons) {
-                button.selected=YES;
+                button.selected = YES;
             }
         }
             break;
         case EYTagView_Type_Display:
         {
             for (UIButton* button in _tagButtons) {
-                button.selected=YES;
+                button.selected = YES;
             }
         }
             break;
         case EYTagView_Type_Single_Selected:
         {
             for (UIButton* button in _tagButtons) {
-                button.selected=[_tagStringsSelected containsObject:button.titleLabel.text];
+                button.selected = [_tagStringsSelected containsObject:button.titleLabel.text];
             }
         }
             break;
         case EYTagView_Type_Multi_Selected:
         {
             for (UIButton* button in _tagButtons) {
-                button.selected=[_tagStringsSelected containsObject:button.titleLabel.text];
+                button.selected = [_tagStringsSelected containsObject:button.titleLabel.text];
             }
         }
             break;
@@ -775,14 +786,14 @@ CGRect buttonFrame;
     tagRemote *tagTmp;
     
     for (EYCheckBoxButton* button in _tagButtons) {
-        tagTmp = tagArray[button.index-1];
+        tagTmp = tagArray[button.index - 1];
         switch (tagTmp.found) {
             case 0:
-                button.colorBg=_colorTagBgDisconnect;
+                button.colorBg = _colorTagBgDisconnect;
                 button.selected = YES;
                 break;
             case 1:
-                button.colorBg=_colorTagBg;
+                button.colorBg = _colorTagBg;
                 button.selected = YES;
                 break;
         }
@@ -791,28 +802,25 @@ CGRect buttonFrame;
 
 -(void)setColorTag:(UIColor *)colorTag
 {
-    _colorTag=colorTag;
+    _colorTag = colorTag;
     for (EYCheckBoxButton* button in _tagButtons) {
-        button.colorText=colorTag;
+        button.colorText = colorTag;
     }
 }
 
 -(void)setTagStringsSelected:(NSMutableArray *)tagStringsSelected
 {
-    _tagStringsSelected=tagStringsSelected;
+    _tagStringsSelected = tagStringsSelected;
     switch (_type) {
         case EYTagView_Type_Single_Selected:
         case EYTagView_Type_Multi_Selected:
         {
             for (UIButton* button in _tagButtons) {
-                button.selected=[tagStringsSelected containsObject:button.titleLabel.text];
+                button.selected = [tagStringsSelected containsObject:button.titleLabel.text];
             }
         }
             break;
         default:
-        {
-            
-        }
             break;
     }
 }
@@ -820,10 +828,10 @@ CGRect buttonFrame;
 #pragma mark autolayout
 -(CGSize)intrinsicContentSize //UIViewNoIntrinsicMetric
 {
-    if (_numberOfLines==0) {
+    if (_numberOfLines == 0) {
         return CGSizeMake(UIViewNoIntrinsicMetric, _newHeight);
     } else {
-        return CGSizeMake((_tagPaddingSize.height+_tagHeight)*_numberOfLines+_tagPaddingSize.height, _newHeight);
+        return CGSizeMake((_tagPaddingSize.height + _tagHeight)*_numberOfLines + _tagPaddingSize.height, _newHeight);
     }
 }
 

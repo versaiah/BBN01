@@ -37,8 +37,6 @@ alpha:1.0]
 #define LOGNOTHING(format,value)
 #endif
 
-#define MAX_TAGS  5
-
 @class EYTagView;
 @protocol EYTagViewDelegate <NSObject>
 
@@ -78,12 +76,12 @@ typedef enum{
 @property (nonatomic) NSInteger numberOfLines;//default 0
 
 @property (nonatomic) float tagHeight;//default
+@property (nonatomic) float tagWidth;
 
 @property (nonatomic) float viewMaxHeight;
 
 @property (nonatomic) CGSize tagPaddingSize;//top & left
 @property (nonatomic) CGSize textPaddingSize;
-
 
 @property (nonatomic, strong) UIFont* fontTag;
 @property (nonatomic, strong) UIFont* fontInput;

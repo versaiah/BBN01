@@ -88,8 +88,11 @@ UIButton    *btnSetup;
     _tagView.colorInputBg = COLORRGB(0xffffff);
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView.backgroundColor = COLORRGB(0xffffff);
+    _tagView.backgroundColor = COLORRGB(0x2ab44e);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView.viewMaxHeight = 604*sgh;
+    _tagView.tagWidth = 318*sgw;
+    _tagView.tagHeight = 220*sgh;
     _tagView.type = EYTagView_Type_Edit;
     [_tagView setUserInteractionEnabled:FALSE];
     _tagView.alpha = 0.5;
@@ -108,6 +111,8 @@ UIButton    *btnSetup;
     _tagView2.backgroundColor = COLORRGB(0xffffff);
     _tagView2.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView2.viewMaxHeight = 604*sgh;
+    _tagView2.tagWidth = 318*sgw;
+    _tagView2.tagHeight = 270*sgh;
     _tagView2.type = EYTagView_Type_Edit_Only_Delete;
     [_tagView2 setUserInteractionEnabled:FALSE];
     _tagView2.alpha = 0.5;
@@ -115,7 +120,7 @@ UIButton    *btnSetup;
     [_tagView2 layoutTagviews];
     [self.view addSubview:_tagView2];
     
-    labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(850*sgw, 360*sgh, 300*sgw, 46*sgh)];
+    labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(800*sgw, 360*sgh, 350*sgw, 46*sgh)];
     [labConnectStatus setFont:[UIFont boldSystemFontOfSize:12]];
     labConnectStatus.textColor = [UIColor whiteColor];
     labConnectStatus.text = connectStatusArray[self.state];
@@ -713,6 +718,12 @@ UIButton    *btnSetup;
         for (int i = 0; i < MAX_TAGS; ++i) {
             tagTmp = arrayTmp[i];
             tagTmp.found = 0;
+            tagTmp.major = 22784;
+            tagTmp.mfgID = 22784;
+            tagTmp.minor = 22784;
+            tagTmp.name = @"123";
+            tagTmp.index = i + 1;
+            tagTmp.enable = 1;
         }
     }
     return arrayTmp;

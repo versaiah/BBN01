@@ -74,6 +74,8 @@ UILabel *labSearch;
     _tagView.backgroundColor = COLORRGB(0xffffff);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView.viewMaxHeight = 604*sgh;
+    _tagView.tagWidth = 318*sgw;
+    _tagView.tagHeight = 270*sgh;
     _tagView.type = EYTagView_Type_Edit;
     _tagView.tfInput.hidden = TRUE;
     _tagView.hidden = TRUE;
