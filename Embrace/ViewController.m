@@ -35,6 +35,11 @@ UIButton    *btnSetup;
     CGFloat sgh = screenSize.height / 2208;
     CGFloat sgw = screenSize.width / 1242;
     
+    if (screenSize.height < 600)
+        _fontSize = [UIFont systemFontOfSize:12];
+    else
+        _fontSize = [UIFont systemFontOfSize:16];
+    
     self.cm = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
     tagCmdArray = [NSArray arrayWithObjects:@"*GTC#",
@@ -65,7 +70,7 @@ UIButton    *btnSetup;
                                             @"*DET-YYY#",
                                             @"*DEA#",
                                             nil];
-    connectStatusArray = [NSArray arrayWithObjects:@"IDLE", @"SCANNING", @"CONNECTING", @"CONNECTED", nil];
+    connectStatusArray = [NSArray arrayWithObjects:@"INITIALIZING", @"SCANNING", @"CONNECTING", @"CONNECTED", nil];
 
     UIImageView *bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"ImageBGMain"]];
     bgView.frame = self.view.bounds;
@@ -120,7 +125,7 @@ UIButton    *btnSetup;
     [self.view addSubview:_tagView2];
     
     labConnectStatus = [[UILabel alloc] initWithFrame:CGRectMake(800*sgw, 360*sgh, 350*sgw, 46*sgh)];
-    [labConnectStatus setFont:[UIFont boldSystemFontOfSize:12]];
+    [labConnectStatus setFont:_fontSize];
     labConnectStatus.textColor = [UIColor whiteColor];
     labConnectStatus.text = connectStatusArray[self.state];
     labConnectStatus.textAlignment = NSTextAlignmentRight;
@@ -200,7 +205,7 @@ UIButton    *btnSetup;
     if ([self.currentPeripheral.peripheral isEqual:peripheral])
     {
         [self.currentPeripheral didDisconnect];
-        self.state = IDLE;
+        self.state = INITIALIZING;
         if (timer.isValid == NO) {
             timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
             [timer fire];
@@ -218,7 +223,7 @@ UIButton    *btnSetup;
 - (void)scanTimeout:(NSTimer*)timer
 {
     switch (self.state) {
-        case IDLE:
+        case INITIALIZING:
             //NSLog(@"Started scan ...");
             [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             self.state = SCANNING;

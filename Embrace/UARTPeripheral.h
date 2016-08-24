@@ -11,7 +11,7 @@
 
 typedef enum
 {
-    IDLE = 0,
+    INITIALIZING = 0,
     SCANNING,
     CONNECTING,
     CONNECTED,

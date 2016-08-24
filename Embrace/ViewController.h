@@ -29,6 +29,7 @@
 @property NSMutableArray *tagArray;
 @property NSInteger tagCount;
 @property tagController *tagControll;
+@property (nonatomic, strong) UIFont* fontSize;
 
 - (void)tagAddAfterSearch:(tagRemote *)tagTarget;
 

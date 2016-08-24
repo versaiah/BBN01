@@ -173,12 +173,12 @@ UILabel *labSearch;
 - (void)scanTimeout:(NSTimer*)timer
 {
     switch (self.state) {
-        case IDLE:
+        case INITIALIZING:
             [self.cm scanForPeripheralsWithServices:nil options:nil];
             self.state = SCANNING;
             break;
         case SCANNING:
-            self.state = IDLE;
+            self.state = INITIALIZING;
             [self.cm stopScan];
             [timer invalidate];
             [self addTags];
