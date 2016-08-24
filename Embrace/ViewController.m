@@ -330,7 +330,9 @@ UIButton    *btnSetup;
     if ([string rangeOfString:@"*GFN-"].location != NSNotFound) {
         tmp = [string substringWithRange:NSMakeRange(5, 1)];
         tagTmp = _tagArray[tagResp];
-        tagTmp.found = [tmp integerValue];
+        if (tagTmp.index != 0) {
+            tagTmp.found = [tmp integerValue];
+        }
         tagResp++;
         if (tagResp == MAX_TAGS) {
             [self reNewButtonStatus];
