@@ -41,7 +41,7 @@ UIButton    *btnSetup;
         _fontSize = [UIFont systemFontOfSize:16];
     
     self.cm = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
-    timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
     tagCmdArray = [NSArray arrayWithObjects:@"*GTC#",
                                             @"*GSN-YYY#",
                                             @"*GMA-YYY#",
@@ -161,7 +161,7 @@ UIButton    *btnSetup;
     if (central.state == CBCentralManagerStatePoweredOn)
     {
         //NSLog(@"centralManagerDidUpdateState");
-        [timer fire];
+        //[timer fire];
     }
 }
 
@@ -170,6 +170,7 @@ UIButton    *btnSetup;
     NSLog(@"Find peripheral %@", peripheral.name);
     [self.cm stopScan];
     self.state = CONNECTING;
+    timerCheck = 0;
     /*
     NSMutableString* nsmstring=[NSMutableString stringWithString:@"\n"];
     [nsmstring appendString:@"Peripheral Info:"];
@@ -196,6 +197,7 @@ UIButton    *btnSetup;
         [self.currentPeripheral didConnect];
         sleep(1);
         self.state = CONNECTED;
+        timerCheck = 0;
     }
 }
 
@@ -206,11 +208,12 @@ UIButton    *btnSetup;
     {
         [self.currentPeripheral didDisconnect];
         self.state = INITIALIZING;
+        timerCheck = 0;
         if (timer.isValid == NO) {
-            timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+            timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
             [timer fire];
         } else {
-            timer.fireDate = [NSDate dateWithTimeInterval:3 sinceDate:[NSDate date]];
+            //timer.fireDate = [NSDate dateWithTimeInterval:1 sinceDate:[NSDate date]];
         }
         [_tagView setUserInteractionEnabled:FALSE];
         _tagView.alpha = 0.5;
@@ -227,6 +230,7 @@ UIButton    *btnSetup;
             //NSLog(@"Started scan ...");
             [self.cm scanForPeripheralsWithServices:@[UARTPeripheral.uartServiceUUID] options:@{CBCentralManagerScanOptionAllowDuplicatesKey: [NSNumber numberWithBool:NO]}];
             self.state = SCANNING;
+            timerCheck = 0;
             break;
         case SCANNING:
             //[self.cm stopScan];
@@ -234,18 +238,29 @@ UIButton    *btnSetup;
             //NSLog(@"ReStarted scan ...");
             break;
         case CONNECTING:
-            [self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
-            [self.cm connectPeripheral:self.currentPeripheral.peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
+            if (timerCheck == SCAN_TIMEOUT) {
+                [self.cm cancelPeripheralConnection:self.currentPeripheral.peripheral];
+                [self.cm connectPeripheral:self.currentPeripheral.peripheral options:@{CBConnectPeripheralOptionNotifyOnDisconnectionKey: [NSNumber numberWithBool:YES]}];
+                timerCheck = 0;
+            } else {
+                timerCheck++;
+            }
             //NSLog(@"ReCONNECTING ...");
             break;
         case CONNECTED:
-            [self sendCmdToController:GET_FOUND Index:0];
+            if (timerCheck == REQUEST_INTERVAL) {
+                [self sendCmdToController:GET_FOUND Index:0];
+                timerCheck = 0;
+            } else {
+                timerCheck++;
+            }
+            /*
             if (timerCheck == 4) {
                 //[self tagCheck];
                 timerCheck = 0;
             } else {
                 timerCheck++;
-            }
+            } */
             break;
         default:
             break;
@@ -262,7 +277,7 @@ UIButton    *btnSetup;
 
 - (void)didReadyToGo
 {
-    [timer invalidate];
+    //[timer invalidate];
     //timer.fireDate = [NSDate dateWithTimeInterval:15 sinceDate:[NSDate date]];
     /*
     [self sendCmdToController:GET_TAG_COUNT Index:0];
@@ -275,15 +290,15 @@ UIButton    *btnSetup;
     [self sendCmdToController:GET_SCAN_INTERVAL Index:0];
     [self sendCmdToController:GET_SCAN_TIMEOUT Index:0];
     [self sendCmdToController:GET_NOTIFICATION Index:0];
-    //[self sendCmdToController:GET_FOUND Index:0];
+    [self sendCmdToController:GET_FOUND Index:0];
     
     [_tagView setUserInteractionEnabled:TRUE];
     _tagView.alpha = 1.0;
     [_tagView2 setUserInteractionEnabled:TRUE];
     _tagView2.alpha = 1.0;
     btnSetup.userInteractionEnabled = TRUE;
-    timer = [NSTimer scheduledTimerWithTimeInterval:15 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
-    [timer fire];
+    //timer = [NSTimer scheduledTimerWithTimeInterval:15 target:self selector:@selector(scanTimeout:) userInfo:nil repeats:YES];
+    //[timer fire];
 }
 
 - (void)didReceiveData:(NSString *)string
@@ -303,6 +318,7 @@ UIButton    *btnSetup;
     if (searchResult.location != NSNotFound) {
         if (tagNotify == 0) {
             [self sendCmdToController:GET_FOUND Index:0];
+            timerCheck = 0;
             tagNotify = 9;
             NSLog(@"===%@===", string);
         }

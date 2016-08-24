@@ -17,7 +17,9 @@
 #import "AddTagView.h"
 #import "SetupSettingsView.h"
 
-#define MAX_TAGS  5
+#define MAX_TAGS            5
+#define SCAN_TIMEOUT        5
+#define REQUEST_INTERVAL    10
 
 @interface ViewController : UIViewController <CBCentralManagerDelegate, UARTPeripheralDelegate,EYTagViewDelegate, ActiveInfoViewDelegate, MissingInfoViewDelegate, InactiveInfoViewDelegate, SetupSettingsViewDelegate>;
 
