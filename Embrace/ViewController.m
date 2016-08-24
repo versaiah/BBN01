@@ -88,7 +88,6 @@ UIButton    *btnSetup;
     _tagView.colorInputBg = COLORRGB(0xffffff);
     _tagView.colorInputPlaceholder = COLORRGB(0x2ab44e);
     _tagView.backgroundColor = COLORRGB(0xffffff);
-    _tagView.backgroundColor = COLORRGB(0x2ab44e);
     _tagView.colorInputBoard = COLORRGB(0x2ab44e);
     _tagView.viewMaxHeight = 604*sgh;
     _tagView.tagWidth = 318*sgw;
@@ -718,12 +717,6 @@ UIButton    *btnSetup;
         for (int i = 0; i < MAX_TAGS; ++i) {
             tagTmp = arrayTmp[i];
             tagTmp.found = 0;
-            tagTmp.major = 22784;
-            tagTmp.mfgID = 22784;
-            tagTmp.minor = 22784;
-            tagTmp.name = @"123";
-            tagTmp.index = i + 1;
-            tagTmp.enable = 1;
         }
     }
     return arrayTmp;
