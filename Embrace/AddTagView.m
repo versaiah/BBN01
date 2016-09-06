@@ -58,12 +58,24 @@
     labName.text = @"Name :";
     [self.view addSubview:labName];
     
-    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(360*sgw, 785*sgh, 400*sgw, 80*sgh)];
-    [_tfName setFont: _viewFont];
+    UILabel *labCode = [[UILabel alloc] initWithFrame:CGRectMake(130*sgw, 900*sgh, 210*sgw, 60*sgh)];
+    [labCode setFont: _viewFont];
+    labCode.text = @"Code :";
+    [self.view addSubview:labCode];
+    
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(360*sgw, 775*sgh, 400*sgw, 100*sgh)];
+    [_tfName setFont:[UIFont systemFontOfSize:14]];
     _tfName.text = @"New";
     _tfName.delegate = self;
     _tfName.borderStyle =  UITextBorderStyleRoundedRect;
     [self.view addSubview:_tfName];
+    
+    _tfCode = [[NoMenuTextField alloc] initWithFrame:CGRectMake(360*sgw, 885*sgh, 400*sgw, 100*sgh)];
+    [_tfCode setFont:[UIFont systemFontOfSize:14]];
+    _tfCode.delegate = self;
+    _tfCode.borderStyle =  UITextBorderStyleRoundedRect;
+    [self.view addSubview:_tfCode];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,10 +88,28 @@
     [[self presentingViewController] dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (BOOL)tagAuth
+{
+    if (_tfCode.text.length == 4) {
+        NSUInteger tmp;
+        NSString *stmp, *strTmp;
+        tmp = (_tagRemotes.minor * _tagRemotes.major) ^ _tagRemotes.mfgID;
+        tmp = tmp & 0xffff;
+        strTmp = [NSString stringWithFormat:@"%X", tmp];
+        stmp = _tfCode.text;
+        if (![strTmp  compare:stmp]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 - (IBAction)BTNAddClick:(UIButton *)sender
 {
     [_tfName resignFirstResponder];
-    if (_tfName.text.length != 0) {
+    [_tfCode resignFirstResponder];
+    if ((_tfName.text.length != 0) && ([self tagAuth])) {
         _tagRemotes.name = _tfName.text;
         ViewController *vc = (ViewController *)self.presentingViewController.presentingViewController;
         [vc tagAddAfterSearch:_tagRemotes];
@@ -96,12 +126,17 @@
     return YES;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    if (textField.text.length == 0) {
-        textField.text = _tagRemotes.name;
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (_tfName.text.length == 0) {
+        _tfName.text = _tagRemotes.name;
     }
+    [textField resignFirstResponder];
     return false;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender{
+    return NO;
 }
 
 /*

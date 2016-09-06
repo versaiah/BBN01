@@ -404,8 +404,8 @@ CGRect buttonFrame;
     tag = [tag stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
     NSRange searchResult = [tag rangeOfString:@"\n"];
     NSString *strtmp1 = [tag substringToIndex:searchResult.location];
-    if (strtmp1.length > 8) {
-        NSString *strtmp2 = [strtmp1 substringToIndex:7];
+    if (strtmp1.length > 7) {
+        NSString *strtmp2 = [strtmp1 substringToIndex:6];
         strtmp2 = [strtmp2 stringByAppendingString:@"..."];
         strtmp2 = [strtmp2 stringByAppendingString:[tag substringFromIndex:searchResult.location]];
         tag = strtmp2;

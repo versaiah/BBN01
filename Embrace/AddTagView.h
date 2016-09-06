@@ -15,6 +15,7 @@
 @interface AddTagView : UIViewController <UITextFieldDelegate>
 @property tagRemote *tagRemotes;
 @property NoMenuTextField *tfName;
+@property NoMenuTextField *tfCode;
 @property (nonatomic, strong) UIFont *viewFont;
 
 @end

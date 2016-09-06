@@ -47,8 +47,8 @@
     
     NSString *strName = [NSString stringWithString:_tagRemotes.name];
     
-    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(355*sgw, 525*sgh, 528*sgw, 80*sgh)];
-    [_tfName setFont: _viewFont];
+    _tfName = [[NoMenuTextField alloc] initWithFrame:CGRectMake(355*sgw, 515*sgh, 528*sgw, 100*sgh)];
+    [_tfName setFont:[UIFont systemFontOfSize:14]];
     _tfName.text = strName;
     _tfName.delegate = self;
     _tfName.borderStyle =  UITextBorderStyleRoundedRect;
