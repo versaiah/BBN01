@@ -95,7 +95,7 @@
         NSString *stmp, *strTmp;
         tmp = (_tagRemotes.minor * _tagRemotes.major) ^ _tagRemotes.mfgID;
         tmp = tmp & 0xffff;
-        strTmp = [NSString stringWithFormat:@"%X", tmp];
+        strTmp = [NSString stringWithFormat:@"%lX", (unsigned long)tmp];
         stmp = _tfCode.text;
         if (![strTmp  compare:stmp]) {
             return YES;
